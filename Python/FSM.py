@@ -14,7 +14,6 @@ Inputs ,    Current State, Next State  ,Output
 1|0    ,    S1           ,    S4       ,5|3
 0|1    ,    S1           ,    S3       ,5|3
 
-
 Inputs ,    Current State, Next State  
 0|0    ,    S0           ,    S1       
 0|1    ,    S0           ,    S2       
