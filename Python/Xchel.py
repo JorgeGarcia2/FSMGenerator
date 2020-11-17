@@ -3,15 +3,14 @@
 import re
 import os
 
-def getFile(self):
-    noError = True
-    fileName = input("\nWhat is the top model's filename? ")
-    #If file has no extension, apend ".v"
+def getString():
+    fileName = input("\nWhat is the table's filename?\n(It must be a csv file) ")
+    #If file has no extension, apend ".csv"
     if (fileName.find(".") == -1): 
-        fileName = fileName + ".v"
+        fileName = fileName + ".csv"
     try: 
         f = open(fileName,"r")
-        self.designCode = f.read()
+        fileCont = f.read()
         print("File read successfully")
         f.close()
     except:
@@ -22,14 +21,14 @@ def getFile(self):
         else: fileName = "./"
         if(os.path.isdir(fileName)):
             for file in os.listdir(fileName):
-                if(re.search(r"^\w((?!_testbench).)*\.+(sv|v)$", file)):
+                if(re.search(r"^\w((?!FSM_Design).)*\.+(sv|v)$", file)):
                     fileName += file
                     print("\nDesign file found, do you want to use: "+fileName+"?(Y,N)")
                     t=input()
                     if t!="n" and t!="N":
                         print(f"File {fileName} will be used!")
                         f = open(fileName,"r")
-                        self.designCode = " "+f.read()
+                        fileCont = f.read()
                         print(f"File {fileName} read successfully")
                         f.close()
                         break
@@ -38,8 +37,11 @@ def getFile(self):
                         else: fileName = "./"
                         print("File not used")
             if fileName=="./":
-                noError = False
+                fileCont = ""
         else: 
             print("The specified path was not found")
-            noError = False
-    return noError
+            fileCont = ""
+    return fileCont
+
+if (__name__=="__main__"):
+    print(getString())
