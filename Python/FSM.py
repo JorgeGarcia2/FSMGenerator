@@ -2,17 +2,16 @@
 
 import re
 import os
-import datetime 
+import datetime
 
 """
-
 States[match(1)]=
                 [[match(1).split()]
                 ,match(2),
                 [match(3).slpit()]]
 """
+
 class FSM:
-    
 
     def getFile(self):
         noError = True
