@@ -5,58 +5,12 @@ import os
 import datetime 
 
 """
-Inputs ,    Current State, Next State  ,Output
-0|0    ,    S0           ,    S1       ,2|3
-0|1    ,    S0           ,    S2       ,2|3
-1|0    ,    S0           ,    S1       ,2|3
-1|1    ,    S0           ,    S2       ,2|3
 
-1|0    ,    S1           ,    S4       ,5|3
-0|1    ,    S1           ,    S3       ,5|3
-
-Inputs ,    Current State, Next State  
-0|0    ,    S0           ,    S1       
-0|1    ,    S0           ,    S2       
-1|0    ,    S0           ,    S1       
-1|1    ,    S0           ,    S2       
-1|0    ,    S1           ,    S4       
-0|1    ,    S1           ,    S3       
-
-dic {"S0":}
-
-Inputs ,    Current State,  Output
-0|0    ,    S0           ,    2|3
-0|1    ,    S0           ,    2|3
-1|0    ,    S0           ,    2|3
-1|1    ,    S0           ,    2|3
-
-1|0    ,    S1           ,    5|3
-0|1    ,    S1           ,    5|3
-
-Registro --> always@(posedge clk or posedge reset) state <= next_state;
-Next state Logic --> case (state or Inputs) next_state = Sx;
-Output Logic --> case (state or Inputs) out1 = x, out2 = y;
-
-
-
-0,S1,S2,1
-1,S1,S1,0
-0,S2,S0,1
-1,S2,S0,1
-
-* Next state logic f(Inputs, CS) -->  contenedor para NSL
-* Output logic f(Inputs, CS)     -->  contenedor para OL
-
-Inputs={"S0":[[0,1][1,0]],"S1":[[1,0][0,1]]}
-
-
-States=["S0","S1",....]
-NState={"S0":["S1","S2"],"S1":["S4","S3"]}
-Outputs={"S0":[[2,3][3,4]],"S1":[[3,5][5,3]]}
-
+States[match(1)]=
+                [[match(1).split()]
+                ,match(2),
+                [match(3).slpit()]]
 """
-
-
 class FSM:
     
 

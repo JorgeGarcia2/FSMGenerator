@@ -10,12 +10,12 @@ while(response != "N" and response != "n"):
     #If the program finds the file, continue
     if(my_FSM.getFile()):
         #Get data from verilog source file
-         my_FSM.getData()
-         #Print contents of translator
-         my_FSM.print()
-         #Create testbench with information found
-         my_FSM.createTB()
-         #Do not iterate again (Purpose finished)
+        #my_FSM.getData()
+        #Print contents of translator
+        #my_FSM.print()
+        #Create testbench with information found
+        #my_FSM.createTB()
+        #Do not iterate again (Purpose finished)
          response="n"
     else:
     #If the program does not find the file, ask to try again
