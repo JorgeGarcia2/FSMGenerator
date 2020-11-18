@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import FM
+import Xchel
 import Jorch
 import Fers
 
@@ -28,6 +29,7 @@ class FSM:
             self.FSMstr = Fers.getFSMHead(dictio,"FSM")
             dicKey = {"inputs":["Op"],"ppal":"S0","outputs":["X"]}
             self.FSMstr += self.getFSMSLogic(dictio,dicKey)
+            self.FSMstr += Xchel.getFSMOLogic(dictio,dicKey)
             print(self.FSMstr)
 
     #Makes the state logic for the machine
@@ -45,7 +47,7 @@ class FSM:
                 else: Temp = "        if("
                 f=False
                 for j in range(len(dicS[S][i][0])):
-                    if (dicS[S][i][0][j] != "x" and dicS[S][i][0][j] != "x"):
+                    if (dicS[S][i][0][j] != "x" and dicS[S][i][0][j] != "X"):
                         if (f): Temp += " && "
                         Temp += dicK["inputs"][j] + " == " + dicS[S][i][0][j]
                         f=True
@@ -58,5 +60,5 @@ class FSM:
             if (IF):
                 FSMSLogic += "        else nextstate = " + dicK["ppal"] + ";"
             FSMSLogic += "\n"
-        FSMSLogic += "      default:\n        nextstate = " + dicK["ppal"] + ";\n    endcase\n  end"
+        FSMSLogic += "      default:\n        nextstate = " + dicK["ppal"] + ";\n    endcase\n  end\n"
         return FSMSLogic
