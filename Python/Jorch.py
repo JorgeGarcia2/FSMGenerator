@@ -1,8 +1,9 @@
 #!/bin/python3
 import csv
-def getFSMDic():
+
+def getFSMDic(path):
     states = {}
-    with open('D:\Bibliotecas\Documents\Repositorios\FSMGenerator\FSMTable.csv', 'r') as file:
+    with open(path, 'r') as file:
         reader = csv.reader(file)
         i = 0
         for row in reader:
@@ -14,5 +15,4 @@ def getFSMDic():
     return states
 
 if (__name__=="__main__"):
-    print(getFSMDic())
-
+    print(getFSMDic('D:\Bibliotecas\Documents\Repositorios\FSMGenerator\FSMTable.csv'))
