@@ -2,8 +2,6 @@
 
 import re
 import os
-import Jorch
-import Fers
 
 #Prompts for valid file name and assigns file text to string
 def getFileCont(suff,Key):
@@ -78,6 +76,8 @@ def getFSMSLogic(dic,ppal):
     return FSMSLogic
 
 if (__name__=="__main__"):
+    import Jorch
+    import Fers
     fileCont = getFileCont("csv","_Design")
     if (fileCont == ""): print("There is no table!")
     else: print("Here's the table!\n\n"+fileCont+"\n\n")
