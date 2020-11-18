@@ -30,12 +30,12 @@ def getFSMDic(path):
                 #InputValue = [size]'[radix][value]
                 for j in range(len(tempIn)):
                     #if radix was not specified, "d" by default
-                    if (tempIn[j].isdecimal()):
+                    if (tempIn[j] != "x" and tempIn[j] != "X"):
                         if (NameInputs[j][2] == None): NameInputs[j][2] = "d"
                         tempIn[j] = NameInputs[j][1] + "'" + NameInputs[j][2] + tempIn[j]
                 #OutputValue = [size]'[radix][value]
                 for j in range(len(tempOut)):
-                    if (tempOut[j].isdecimal()):
+                    if (tempOut[j] != "x" and tempOut[j] != "X"):
                         if (NameOutputs[j][2] == None): NameOutputs[j][2] = "d"
                         tempOut[j] = NameOutputs[j][1] + "'" + NameOutputs[j][2] + tempOut[j]
                 #If key doesn't exist
@@ -47,4 +47,4 @@ def getFSMDic(path):
     return states, NameInputs, NameOutputs, fistState
 
 if (__name__=="__main__"):
-    print(getFSMDic('D:\Bibliotecas\Documents\Repositorios\FSMGenerator\FSMTable.csv'))
+    print(getFSMDic('D:\Bibliotecas\Documents\Repositorios\FSMGenerator\MultiFSM.csv'))

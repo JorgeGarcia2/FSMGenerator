@@ -1,5 +1,5 @@
 Inputs,Current State,Next State,Output
-Op(6'h),CS,NS,X(14'd)
+Op(6h),CS,NS,X(14d)
 x,S0,S1,1
 0,S1,S6,2
 4,S1,S8,3
