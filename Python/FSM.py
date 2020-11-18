@@ -25,15 +25,16 @@ class FSM:
             print("There is no table!")
         else:
             print("Here's the table "+fileName+"!!\n\n")
-            dictio, NI, NO = Jorch.getFSMDic(fileName)
+            dictio, NI, NO, ppal = Jorch.getFSMDic(fileName)
             print(NI)
             print(NO)
-            self.FSMstr = Fers.getFSMHead(dictio,"FSM")
-            self.FSMstr += self.getFSMLogic(dictio,NI,NO)
-            print(self.FSMstr)
+            name = "FSM"
+            self.FSMstr = Fers.getFSMHead(dictio,name)
+            self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
+            self.writeFSM(name,self.FSMstr)
 
     #Makes the state logic for the machine
-    def getFSMLogic(self,dicS,Ni,No):
+    def getFSMLogic(self,dicS,Ni,No,ppal):
         FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n"
         FSMOLogic="\n  //Output Logic Block\n  always@(state)\n"
 
@@ -65,7 +66,7 @@ class FSM:
                     FSMOLogic += "        end\n"
                 FSMOLogic += "\n"
             if (IF):
-                FSMSLogic += "        else\n          nextstate = " + "S0" + ";\n"
+                FSMSLogic += "        else\n          nextstate = " + ppal + ";\n"
                 FSMOLogic += "        else begin\n"
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
@@ -73,7 +74,7 @@ class FSM:
                 FSMOLogic += "        end\n\n"
             FSMSLogic += "\n"
             FSMOLogic += "\n"
-        FSMSLogic += "      default:\n        nextstate = " + "S0" + ";\n"
+        FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n"
         FSMOLogic += "      default: begin\n"
         for j in range(len(No)):
             FSMOLogic += "        " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
@@ -82,56 +83,8 @@ class FSM:
         FSMOLogic += "    endcase\n  end\n\nendmodule"
         return FSMSLogic + FSMOLogic
 
-"""
-    #Makes the state logic for the machine
-    def getFSMLogic(self,dicS,dicK,opt):
-        FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n"
-        FSMOLogic="\n  //Output Logic Block\n  always@(state)\n"
-
-        for S in dicS.keys():
-            FSMSLogic += "      " + S + ":\n"
-            FSMOLogic += "      " + S + ":\n"
-            IF = False
-            for i in range(len(dicS[S])):
-                if (IF): Temp = "        else if("
-                else: Temp = "        if("
-                f=False
-                for j in range(len(dicS[S][i][0])):
-                    if (dicS[S][i][0][j] != "x" and dicS[S][i][0][j] != "X"):
-                        if (f): Temp += " && "
-                        Temp += Ni[j] + " == " + dicS[S][i][0][j]
-                        f=True
-                if (Temp != "        if("):
-                    IF = True
-                    if (opt == 1 and len(No) > 1):
-                        FSMLogic += Temp + ") begin\n"
-                    else:
-                        FSMLogic += Temp + ")\n"
-                if (opt == 0):
-                    FSMLogic += "          nextstate = " + dicS[S][i][1] + ";\n\n"
-                else:
-                    for j in range(len(No)):
-                        if (dicS[S][i][2][j] != "x" and dicS[S][i][2][j] != "X"):
-                            FSMLogic += "          " + No[j] + " = " + dicS[S][i][2][j] + ";\n"
-                    if (opt == 1 and len(No) > 1):
-                        FSMLogic += "        end\n"
-                    FSMLogic += "\n"
-            if (IF):
-                if (opt == 0):
-                    FSMLogic += "        else\n          nextstate = " + dicK["ppal"] + ";\n"
-                else:
-                    FSMLogic += "        else begin\n"
-                    for j in range(len(No)):
-                        if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
-                            FSMLogic += "          " + No[j] + " = " + dicS[S][0][2][j] + ";\n"
-                    FSMLogic += "        end\n\n"
-            FSMLogic += "\n"
-        if (opt == 0):
-            FSMLogic += "      default:\n        nextstate = " + dicK["ppal"] + ";\n"
-        else:
-            FSMLogic += "      default: begin\n"
-            for j in range(len(No)):
-                FSMLogic += "        " + No[j] + " = 0;\n"
-            FSMLogic += "      end\n"
-        FSMLogic += "    endcase\n  end\n"
-        return FSMLogic"""
+    def writeFSM(self,nam,cont):
+        f = open(nam + "_Design.v","w")
+        f.write(cont)
+        f.close()
+        print(f"file {nam}_Design.v created succesfully!\n")
