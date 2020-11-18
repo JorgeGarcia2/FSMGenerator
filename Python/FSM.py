@@ -69,7 +69,7 @@ class FSM:
                 FSMOLogic += "        else begin\n"
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
-                        FSMOLogic += "          " + No[j][0] + " = " + dicS[S][0][2][j] + ";\n"
+                        FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
                 FSMOLogic += "        end\n\n"
             FSMSLogic += "\n"
             FSMOLogic += "\n"
@@ -79,7 +79,7 @@ class FSM:
             FSMOLogic += "        " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
         FSMOLogic += "      end\n"
         FSMSLogic += "    endcase\n  end\n"
-        FSMOLogic += "    endcase\n  end\n"
+        FSMOLogic += "    endcase\n  end\n\nendmodule"
         return FSMSLogic + FSMOLogic
 
 """
