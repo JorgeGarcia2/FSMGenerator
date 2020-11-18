@@ -3,6 +3,7 @@
 import re
 import os
 import Jorch
+import Fers
 
 #Prompts for valid file name and assigns file text to string
 def getFileCont(suff,Key):
@@ -54,24 +55,25 @@ def getFileCont(suff,Key):
 
 #Prompts for valid file name and assigns file text to string
 def getFSMSLogic(dic,ppal):
-    FSMSLogic="\talways@(state"
+    FSMSLogic="\n  //Next State Logic Block\n  always@(state"
     
     for i in range(len(dic["S0"][0][0])): FSMSLogic += " or i" + str(i)
-    FSMSLogic += ")\n\tbegin\n\t\tcase(state)\n"
+    FSMSLogic += ")\n  begin\n    case(state)\n"
 
     for S in dic.keys():
-        FSMSLogic += "\t\t\t" + S + ":\n"
+        FSMSLogic += "      " + S + ":\n"
         for i in range(len(dic[S])):
-            Temp = "\t\t\t\tif("
+            Temp = "        if("
             f=False
             for j in range(len(dic[S][i][0])):
                 if (dic[S][i][0][j] != "x"):
                     if (f): Temp += " && "
                     Temp += "i" + str(j) + " == " + dic[S][i][0][j]
                     f=True
-            if (Temp != "\t\t\t\tif("): FSMSLogic += Temp + ") "
-            FSMSLogic += "nextState = " + dic[S][i][1] + ";\n"
-    FSMSLogic += "\t\t\tdefault: nextState = " + ppal + ";\n\t\tendcase\n\tend"
+            if (Temp != "        if("): FSMSLogic += Temp + ") "
+            FSMSLogic += "nextstate = " + dic[S][i][1] + ";\n"
+        FSMSLogic += "\n"
+    FSMSLogic += "      default: nextstate = " + ppal + ";\n    endcase\n  end"
 
     return FSMSLogic
 
@@ -80,6 +82,6 @@ if (__name__=="__main__"):
     if (fileCont == ""): print("There is no table!")
     else: print("Here's the table!\n\n"+fileCont+"\n\n")
     dictio = Jorch.getFSMDic("FSMTable.csv")
-    print(dictio)
     #dictio = {"S0":[[[0],"S1",[0]],[[1],"S2",[1]]],"S1":[[[0],"S2",[1]],[[1],"S1",[0]]],"S2":[[[0],"S0",[1]],[[1],"S0",[1]]]}
+    print(Fers.getFSMHead(dictio,"FSM"))
     print(getFSMSLogic(dictio,"S0"))
