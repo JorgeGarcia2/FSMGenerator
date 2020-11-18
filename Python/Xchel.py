@@ -5,12 +5,11 @@ import os
 
 #Prompts for valid file name and assigns file text to string
 def getFileCont(suff,Key):
-
     fileCont = "y"
     #Check if the user wants to continue trying new file names
     while(fileCont == "Y" or fileCont == "y"):
         fileCont = ""
-        fileName = input("\nWhat is the top model's filename? ")
+        fileName = input("\nWhat is the top model's filename?\n(This program only searches for "+suff+" estensions) ")
         #If file has no extension, apend .suff
         if (fileName.find(".") == -1): 
             fileName = fileName + "." + suff
@@ -49,10 +48,29 @@ def getFileCont(suff,Key):
         if (fileCont == ""):
             fileCont = input("\nDo you want to try again? (Y/N)\n")
             if (fileCont == "N" or fileCont == "n"): fileCont = ""
-
+            else: fileCont = "y"
     return fileCont
+
+#Prompts for valid file name and assigns file text to string
+def getFSMSLogic(dic,ppal):
+    FSMSLogic="\talways@(state"
+    
+    for i in range(len(dic["S0"][0][0])): FSMSLogic += " or i" + str(i)
+    FSMSLogic += ")\n\tbegin\n\t\tcase(state)\n"
+
+    for S in dic.keys():
+        FSMSLogic += "\t\t\t" + S + ":\n"
+        for i in range(len(dic[S])):
+            FSMSLogic += "\t\t\t\tif(i0 == " + str(dic[S][i][0][0])
+            for j in range(len(dic[S][i][0])-1): FSMSLogic += " && i" + str(j+1) + " == " + str(dic[S][i][0][j+1])
+            FSMSLogic += ") nextState = " + str(dic[S][i][1]) + ";\n"
+    FSMSLogic += "\t\t\tdefault: nextState = " + ppal + ";\n\t\tendcase\n\tend"
+
+    return FSMSLogic
 
 if (__name__=="__main__"):
     fileCont = getFileCont("csv","_Design")
     if (fileCont == ""): print("There is no table!")
-    else: print("Here's the table!\n\n"+fileCont)
+    else: print("Here's the table!\n\n"+fileCont+"\n\n")
+    dictio = {"S0":[[[0],"S1",[0]],[[1],"S2",[1]]],"S1":[[[0],"S2",[1]],[[1],"S1",[0]]],"S2":[[[0],"S0",[1]],[[1],"S0",[1]]]}
+    print(getFSMSLogic(dictio,"S0"))
