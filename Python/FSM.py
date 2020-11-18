@@ -5,10 +5,12 @@ import Jorch
 import Fers
 
 """
-States[match(1)]=
-                [[match(1).split()]
-                ,match(2),
-                [match(3).slpit()]]
+States=
+{
+"State0":[[in1,in2,...],"Nstate1",[out1,out2,...]]
+         [[in3,in4,...],"Nstate2",[out3,out4,...]]
+"State1":[[in1,in2,...],"Nstate1",[out1,out2,...]]
+}
 """
 
 class FSM:

@@ -3,7 +3,7 @@
 import re
 import os
 
-def getString():
+def getFileString():
     fileName = input("\nWhat is the table's filename?\n(It must be a csv file) ")
     #If file has no extension, apend ".csv"
     if (fileName.find(".") == -1): 
@@ -21,7 +21,7 @@ def getString():
         else: fileName = "./"
         if(os.path.isdir(fileName)):
             for file in os.listdir(fileName):
-                if(re.search(r"^\w((?!FSM_Design).)*\.+(sv|v)$", file)):
+                if(re.search(r"^\w((?!FSM_Design).)*\.+(csv)$", file)):
                     fileName += file
                     print("\nDesign file found, do you want to use: "+fileName+"?(Y,N)")
                     t=input()
@@ -44,4 +44,6 @@ def getString():
     return fileCont
 
 if (__name__=="__main__"):
-    print(getString())
+    fileCont = getFileString()
+    if (fileCont == ""): print("There is no table!")
+    else: print("Here's the table!\n\n"+fileCont)
