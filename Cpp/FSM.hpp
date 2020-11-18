@@ -5,15 +5,15 @@
 
 using namespace std;
 
-class Line
+class FSMLine
 {
     public:
         //Constructor
-        Line(vector<string> inputs, vector<string> outputs, string next_state)
+        FSMLine(vector<string> inputs, string next_state, vector<string> outputs)
         {
             line_inputs = inputs;
-            line_outputs = outputs;
             line_next_state = next_state;
+            line_outputs = outputs;
         }
 
         //Accessor methods
@@ -28,5 +28,5 @@ class Line
         string line_next_state;
 };
 
-typedef vector<Line> Line_vector;
-typedef map<string, Line_vector> dictionary;
+typedef vector<FSMLine> Line_vector;
+typedef map<string, Line_vector> FSMdictionary;

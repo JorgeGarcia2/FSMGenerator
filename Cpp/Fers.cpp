@@ -1,56 +1,37 @@
-#include <iostream>
-#include <map>
-#include <vector>
-#include <string>
+#include "FSM.hpp"
+#include "FM.hpp"
 
 using namespace std;
 
-class Line
-{
-    public:
-        //Constructor
-        Line(vector<string> inputs, vector<string> outputs, string next_state)
-        {
-            line_inputs = inputs;
-            line_outputs = outputs;
-            line_next_state = next_state;
-        }
+/*
+dummy_dic = { 
+    "S0": [[[0,0,0], "S1", [1]]],
+    "S1": [[[0,0,0], "S2", [1]]],
+    "S2": [[[0,0,0], "S0", [1]]]
+}
 
-        //Accessor methods
-        vector<string> get_inputs() {return line_inputs;}
-        vector<string> get_outputs() {return line_outputs;}
-        string get_next_state() {return line_next_state;}
-    
-    private:
-        //Attributes
-        vector<string> line_inputs;
-        vector<string> line_outputs;
-        string line_next_state;
-};
+dummy_dic = { 
+"S0": [[[], "S1", [1]], [[], "S1", [0]]],
+"S1": [[[], "S2", [0]]],
+"S2": [[[], "S0", [0]]]
+}
 
-typedef vector<Line> Line_vector;
-typedef map<string, Line_vector> dictionary;
+[[["0"], "S1", ["1"]]]  --> vector de objetos tipo FSMLine
+ [["0"], "S1", ["1"]]   --> objecto tipo FSMLine
+vector de strings, string, vector de strings
+
+FSMdictionary={{key,vector{FSMLine(),FSMLine()}}.{key,vector{FSMLine(),FSMLine()}}} --> Manera de crear diccionario :D
+
+*/
 
 string getFSMHead()
 {
-    /*
-    dummy_dic = { 
-    "S0": [[[], "S1", [1]], [[], "S1", [0]]],
-    "S1": [[[], "S2", [0]]],
-    "S2": [[[], "S0", [0]]]
-    }
-
-    [[[], "S1", [1]], [[], "S1", [0]]]  --> vector de vector de vector
-    [[], "S1", [1]], [[], "S1", [0]]    --> vector de vector
-    [], "S1", [1]   --> vector de listS, S, listS
-    lista de strings, string, lista de strings
-    */
-
-
+    FSMdictionary States = {{"S0",{FSMLine({"1","2","3"},"S0",{"11","12","13"}),FSMLine({"4","5","6"},"S1",{"14","15","16"})}},
+                      {"S1",{FSMLine({"7","8","9"},"S1",{"17","18","19"}),FSMLine({"0","a","b"},"S0",{"10","1a","1b"})}}};
     
    
 
-    return "";
+    return "holis";
 }
 
 int main()
