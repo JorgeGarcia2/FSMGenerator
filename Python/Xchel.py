@@ -102,7 +102,7 @@ if (__name__=="__main__"):
     import Fers
 
     fileName = getFileName("csv","_Design")
-    print(fileName + ":" + fileCont)
+    
     if (fileName == ""):
         print("There is no table!")
     else:
