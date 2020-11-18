@@ -1,5 +1,5 @@
 Inputs,Current State,Next State,Output
-A|B,CS,NS,X
+A(1h)|B(1b),CS,NS,X(2)
 0|x,S0,S0,0
 1|x,S0,S1,0
 x|0,S1,S0,0
