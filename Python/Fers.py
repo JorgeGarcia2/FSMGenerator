@@ -33,9 +33,7 @@ dummy_dic = {
 }
 
 #Creates the Verilog design file's header (TOP module with inputs, outputs and states)
-def getFSMHead(dic, name):
-    print(dic)          #Just to know that the dictionary is correctly passed
-    print()             #Just a line break :P
+def getFSMHead(dic, name, input_list, output_list):
 
     keys_list = []      #This list will store the dictionary keys (because the number of states can vary between FSMs)
     for key in dic.keys():
@@ -51,14 +49,18 @@ def getFSMHead(dic, name):
 
     if (number_of_inputs > 0):
         FSMHead += "  input "
-        for i in range(number_of_inputs):   #For now, only 1-bit inputs considered
-            FSMHead += f"in{i}, "
+        for i in input_list:
+            if (int(i[1]) > 1):
+                FSMHead += f"[{int(i[1])-1}:0] "
+            FSMHead += f"{i[0]}, "
         FSMHead += "\n"
     
     FSMHead += "  output reg "
 
-    for i in range(number_of_outputs):  #For now, only 1-bit outputs considered
-        FSMHead += f"out{i}, "
+    for i in output_list:
+        if (int(i[1]) > 1):
+            FSMHead += f"[{int(i[1])-1}:0] " 
+        FSMHead += f"{i[0]}, "
 
     FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
     
@@ -72,8 +74,6 @@ def getFSMHead(dic, name):
                 "  always@ (posedge clock or posedge reset)\n"
                f"    if (reset) state <= {keys_list[0]};\n"
                 "    else       state <= nextstate;\n")
-
-    
     
     return FSMHead
 

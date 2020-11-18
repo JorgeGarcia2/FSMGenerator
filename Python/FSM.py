@@ -29,7 +29,7 @@ class FSM:
             print(NI)
             print(NO)
             name = "FSM"
-            self.FSMstr = Fers.getFSMHead(dictio,name)
+            self.FSMstr = Fers.getFSMHead(dictio,name,NI,NO)
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
             self.writeFSM(name,self.FSMstr)
 
