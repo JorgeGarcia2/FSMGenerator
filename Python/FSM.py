@@ -28,16 +28,13 @@ class FSM:
             dictio = Jorch.getFSMDic(fileName)
             self.FSMstr = Fers.getFSMHead(dictio,"FSM")
             dicKey = {"inputs":["Op"],"ppal":"S0","outputs":["X"]}
-            self.FSMstr += self.getFSMSLogic(dictio,dicKey)
-            self.FSMstr += Xchel.getFSMOLogic(dictio,dicKey)
+            self.FSMstr += self.getFSMLogic(dictio,dicKey,0)
+            self.FSMstr += self.getFSMLogic(dictio,dicKey,1)
             print(self.FSMstr)
 
     #Makes the state logic for the machine
-    def getFSMSLogic(self,dicS,dicK):
-        FSMSLogic="\n  //Next State Logic Block\n  always@(state"
-        
-        for i in dicK["inputs"]: FSMSLogic += " or " + i
-        FSMSLogic += ")\n  begin\n    case(state)\n"
+    def getFSMLogic(self,dicS,dicK,opt):
+        FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n"
 
         for S in dicS.keys():
             FSMSLogic += "      " + S + ":\n"

@@ -77,27 +77,3 @@ def getFSMOLogic(dicS,dicK):
     
     for i in dicK["inputs"]: FSMSLogic += " or " + i
     FSMSLogic += ")\n  begin\n    case(state)\n"
-
-    for S in dicS.keys():
-        FSMSLogic += "      " + S + ":\n"
-        IF = False
-        for i in range(len(dicS[S])):
-            if (IF): Temp = "        else if("
-            else: Temp = "        if("
-            f=False
-            for j in range(len(dicS[S][i][0])):
-                if (dicS[S][i][0][j] != "x" and dicS[S][i][0][j] != "X"):
-                    if (f): Temp += " && "
-                    Temp += dicK["inputs"][j] + " == " + dicS[S][i][0][j]
-                    f=True
-            if (Temp != "        if("):
-                IF = True
-                FSMSLogic += Temp + ") "
-            else:
-                FSMSLogic += "        "
-            FSMSLogic += "nextstate = " + dicS[S][i][1] + ";\n"
-        if (IF):
-            FSMSLogic += "        else nextstate = " + dicK["ppal"] + ";"
-        FSMSLogic += "\n"
-    FSMSLogic += "      default:\n        nextstate = " + dicK["ppal"] + ";\n    endcase\n  end\n"
-    return FSMSLogic
