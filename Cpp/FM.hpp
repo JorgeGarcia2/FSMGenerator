@@ -40,7 +40,7 @@ inline string getFileName(string suf, string key, string def)
 inline string getFileCont(string fileName){
     ifstream file;
     file.open(fileName,ios::in);
-    string fileCont = " " + string((istreambuf_iterator<char>(file) ),(istreambuf_iterator<char>()));
+    string fileCont = string((istreambuf_iterator<char>(file) ),(istreambuf_iterator<char>()));
     file.close();
     return fileCont;
 }
