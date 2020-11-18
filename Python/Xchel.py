@@ -17,8 +17,8 @@ def getFileCont(suf,key):
     f.close()
     return st
 
-def getFileName(suff = "",key = ""):
-    if (suff == ""):
+def getFileName(suf = "",key = ""):
+    if (suf == ""):
         suf = gsuf
         key = gkey
     fileCont = "y"
@@ -75,7 +75,7 @@ def getFileName(suff = "",key = ""):
 def getFSMSLogic(dic,ppal):
     FSMSLogic="\n  //Next State Logic Block\n  always@(state"
     
-    for i in range(len(dic["S0"][0][0])): FSMSLogic += " or i" + str(i)
+    for i in range(len(dic["S0"][0][0])): FSMSLogic += " or in" + str(i)
     FSMSLogic += ")\n  begin\n    case(state)\n"
 
     for S in dic.keys():
@@ -84,24 +84,30 @@ def getFSMSLogic(dic,ppal):
             Temp = "        if("
             f=False
             for j in range(len(dic[S][i][0])):
-                if (dic[S][i][0][j] != "x"):
+                if (dic[S][i][0][j] != "x" and dic[S][i][0][j] != "x"):
                     if (f): Temp += " && "
-                    Temp += "i" + str(j) + " == " + dic[S][i][0][j]
+                    Temp += "in" + str(j) + " == " + dic[S][i][0][j]
                     f=True
-            if (Temp != "        if("): FSMSLogic += Temp + ") "
+            if (Temp != "        if("):
+                FSMSLogic += Temp + ") "
+            else:
+                FSMSLogic += "        "
             FSMSLogic += "nextstate = " + dic[S][i][1] + ";\n"
         FSMSLogic += "\n"
-    FSMSLogic += "      default: nextstate = " + ppal + ";\n    endcase\n  end"
-
+    FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n    endcase\n  end"
     return FSMSLogic
 
 if (__name__=="__main__"):
     import Jorch
     import Fers
-    fileCont = getFileCont("csv","_Design")
-    if (fileCont == ""): print("There is no table!")
-    else: print("Here's the table!\n\n"+fileCont+"\n\n")
-    dictio = Jorch.getFSMDic("FSMTable.csv")
-    #dictio = {"S0":[[[0],"S1",[0]],[[1],"S2",[1]]],"S1":[[[0],"S2",[1]],[[1],"S1",[0]]],"S2":[[[0],"S0",[1]],[[1],"S0",[1]]]}
-    print(Fers.getFSMHead(dictio,"FSM"))
-    print(getFSMSLogic(dictio,"S0"))
+
+    fileName = getFileName("csv","_Design")
+    print(fileName + ":" + fileCont)
+    if (fileName == ""):
+        print("There is no table!")
+    else:
+        print("Here's the table!\n\n"+fileName+"\n\n")
+        dictio = Jorch.getFSMDic(fileName)
+        #dictio = {"S0":[[[0],"S1",[0]],[[1],"S2",[1]]],"S1":[[[0],"S2",[1]],[[1],"S1",[0]]],"S2":[[[0],"S0",[1]],[[1],"S0",[1]]]}
+        print(Fers.getFSMHead(dictio,"FSM"))
+        print(getFSMSLogic(dictio,"S0"))
