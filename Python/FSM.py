@@ -2,7 +2,6 @@
 
 import FM
 import Xchel
-import Jorch
 import Fers
 
 """
@@ -24,10 +23,7 @@ class FSM:
         if (fileName == ""):
             print("There is no table!")
         else:
-            print("Here's the table "+fileName+"!!\n\n")
-            dictio, NI, NO, ppal = Jorch.getFSMDic(fileName)
-            print(NI)
-            print(NO)
+            dictio, NI, NO, ppal = FM.getFSMData(fileName)
             name = "FSM"
             self.FSMstr = Fers.getFSMHead(dictio,name)
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
@@ -35,12 +31,12 @@ class FSM:
 
     #Makes the state logic for the machine
     def getFSMLogic(self,dicS,Ni,No,ppal):
-        FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n"
-        FSMOLogic="\n  //Output Logic Block\n  always@(state)\n"
+        FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n  begin\n    case(state)\n"
+        FSMOLogic="\n  //Output Logic Block\n  always@(state)\n  begin\n    case(state)\n"
 
         for S in dicS.keys():
-            FSMSLogic += "      " + S + ":\n"
-            FSMOLogic += "      " + S + ":\n"
+            FSMSLogic += "      " + S + ": begin\n"
+            FSMOLogic += "      " + S + ": begin\n"
             IF = False
             for i in range(len(dicS[S])):
                 if (IF): Temp = "        else if("
@@ -62,7 +58,7 @@ class FSM:
                 for j in range(len(No)):
                     if (dicS[S][i][2][j] != "x" and dicS[S][i][2][j] != "X"):
                         FSMOLogic += "          " + No[j][0] + " = " + dicS[S][i][2][j] + ";\n"
-                if (len(No) > 1):
+                if (IF):
                     FSMOLogic += "        end\n"
                 FSMOLogic += "\n"
             if (IF):
@@ -71,9 +67,9 @@ class FSM:
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
                         FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
-                FSMOLogic += "        end\n\n"
-            FSMSLogic += "\n"
-            FSMOLogic += "\n"
+                FSMOLogic += "        end\n"
+            FSMSLogic += "      end\n"
+            FSMOLogic += "      end\n"
         FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n"
         FSMOLogic += "      default: begin\n"
         for j in range(len(No)):
