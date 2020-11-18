@@ -1,4 +1,4 @@
-#!/bin/python3.6
+#!/bin/python3
 
 from FSM import FSM
 

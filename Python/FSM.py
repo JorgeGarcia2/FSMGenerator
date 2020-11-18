@@ -1,17 +1,7 @@
 #!/bin/python3
 
+import math
 import FM
-import Xchel
-import Fers
-
-"""
-States=
-{
-"State0":[[in1,in2,...],"Nstate1",[out1,out2,...]]
-         [[in3,in4,...],"Nstate2",[out3,out4,...]]
-"State1":[[in1,in2,...],"Nstate1",[out1,out2,...]]
-}
-"""
 
 class FSM:
 
@@ -25,9 +15,54 @@ class FSM:
         else:
             dictio, NI, NO, ppal = FM.getFSMData(fileName)
             name = "FSM"
-            self.FSMstr = Fers.getFSMHead(dictio,name,NI,NO)
+            self.FSMstr = self.getFSMHead(dictio,name,NI,NO)
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
             self.writeFSM(name,self.FSMstr)
+
+    #Creates the Verilog design file's header (TOP module with inputs, outputs and states)
+    def getFSMHead(self,dic, name, input_list, output_list):
+
+        keys_list = []      #This list will store the dictionary keys (because the number of states can vary between FSMs)
+        for key in dic.keys():
+            keys_list.append(key)
+
+        number_of_inputs = len( dic[keys_list[0]][0][0] )
+        #number_of_outputs = len( dic[keys_list[0]][0][2] )
+        number_of_states = len(keys_list)
+        required_state_bits = math.ceil(math.log(number_of_states, 2))  #Required number of bits to encode the different states
+        
+        FSMHead =   (f"module {name}(\n"
+                    "  input reset, clock,\n")
+
+        if (number_of_inputs > 0):
+            FSMHead += "  input "
+            for i in input_list:
+                if (int(i[1]) > 1):
+                    FSMHead += f"[{int(i[1])-1}:0] "
+                FSMHead += f"{i[0]}, "
+            FSMHead += "\n"
+        
+        FSMHead += "  output reg "
+
+        for i in output_list:
+            if (int(i[1]) > 1):
+                FSMHead += f"[{int(i[1])-1}:0] " 
+            FSMHead += f"{i[0]}, "
+
+        FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
+        
+        delimiter = ' '                      
+        keys_string = delimiter.join(keys_list)     #Pass the states keys to a string for later use
+
+        FSMHead += (");\n\n"
+                f"  typedef enum reg [{required_state_bits-1}:0] {{{keys_string}}} statetype;\n"
+                f"  statetype state, nextstate;\n\n"    #Should be "  statetype [{required_state_bits-1}:0] state, nextstate;" but EPWave is weird
+                    "  //State register\n"
+                    "  always@ (posedge clock or posedge reset)\n"
+                f"    if (reset) state <= {keys_list[0]};\n"
+                    "    else       state <= nextstate;\n")
+        
+        return FSMHead
 
     #Makes the state logic for the machine
     def getFSMLogic(self,dicS,Ni,No,ppal):
