@@ -1,15 +1,18 @@
 #include "FSM.hpp"
-#include "FM.hpp"
 #include <math.h>
 
 using namespace std;
 
 /*
-dummy_dic = { 
+dummy_dic = {       --> simple dictionary
     "S0": [[[0,0,0], "S1", [1]]],
     "S1": [[[0,0,0], "S2", [1]]],
     "S2": [[[0,0,0], "S0", [1]]]
 }
+
+/*FSMdictionary States = {{"S0",{FSMLine({"0","0","0"},"S1",{"1"})}},       --> simple dictionary C++ version
+                        {"S1",{FSMLine({"0","0","0"},"S2",{"1"})}},
+                        {"S2",{FSMLine({"0","0","0"},"S0",{"1"})}}};
 
 [[["0"], "S1", ["1"]]]  --> vector de objetos tipo FSMLine
  [["0"], "S1", ["1"]]   --> objecto tipo FSMLine
@@ -19,16 +22,19 @@ FSMdictionary={{key,vector{FSMLine(),FSMLine()}}.{key,vector{FSMLine(),FSMLine()
 
 */
 
-string getFSMHead(string& name)
+string getFSMHead(string& name, FSMdictionary& States, busInfo& input_list, busInfo& output_list)
 {
-    FSMdictionary States = {{"S0",{FSMLine({"0","0","0"},"S1",{"1"})}},
-                            {"S1",{FSMLine({"0","0","0"},"S2",{"1"})}},
-                            {"S2",{FSMLine({"0","0","0"},"S0",{"1"})}}};
+
+    for (int i=0; i< input_list.size(); i++)
+        cout << "entrada: " << input_list[i][0] << endl;
+    for (int i=0; i< output_list.size(); i++)
+        cout << "salida: " << output_list[i][0] << endl;
 
     vector<string> keys_vector;     //Store the dictionary keys inside the keys_vector for later use
     for(map<string, Line_vector>::iterator it = States.begin(); it != States.end(); ++it)
     {
         keys_vector.push_back(it->first);
+        //cout << "Key: " << it->first << endl;
     }
 
     //States[keys_vector[i]][j] gets the j-esim object of type FSMLine, whose key is keys_vector[i]
@@ -42,30 +48,47 @@ string getFSMHead(string& name)
     FSMHead += "module " + name + "(\n"
              + "  input reset, clock, \n";
 
+    unsigned int current_bus_size = 0;          //Create variable for later use
+    unsigned int last_bus_size = 0;             //Create variable for later use
+
     if (number_of_inputs > 0)
     {
-        FSMHead += "  input ";
-        for (int i=0; i<number_of_inputs; i++)     //Se actualizará cuando se tenga la input_list
-        {
-            FSMHead += "in" + to_string(i) + ", ";
-        }
         /* for i in input_list:     --> Modelo a seguir
                 if (int(i[1]) > 1):
                     FSMHead += f"[{int(i[1])-1}:0] "
                 FSMHead += f"{i[0]}, " */
-        FSMHead += "\n";
+        
+        for (unsigned int i = 0; i < input_list.size(); i++)
+        {
+            current_bus_size = stoi(input_list[i][1]);       //Store the current bus size
+            if (current_bus_size != last_bus_size)
+            {
+                FSMHead += "  input ";
+                if (current_bus_size > 1)
+                    FSMHead += "[" + to_string(current_bus_size - 1) + ":0] ";
+            }
+            FSMHead += input_list[i][0] + ",\n";
+            last_bus_size = current_bus_size;
+        }
     }
 
-    FSMHead += "  output reg ";
-
-    for (int i=0; i<number_of_outputs; i++)     //Se actualizará cuando se tenga la output_list
-    {
-        FSMHead += "out" + to_string(i) + ", ";
-    }
+    current_bus_size = last_bus_size = 0;
     /* for i in output_list:     --> Modelo a seguir
             if (int(i[1]) > 1):
                 FSMHead += f"[{int(i[1])-1}:0] " 
             FSMHead += f"{i[0]}, " */
+    for (unsigned int i = 0; i < output_list.size(); i++)
+    {
+        current_bus_size = stoi(output_list[i][1]);       //Store the current bus size
+        if (current_bus_size != last_bus_size)
+        {
+            FSMHead += "  output reg ";
+            if (current_bus_size > 1)
+                FSMHead += "[" + to_string(current_bus_size - 1) + ":0] ";
+        }
+        FSMHead += output_list[i][0] + ",\n";
+        last_bus_size = current_bus_size;
+    }
 
     FSMHead.erase(FSMHead.end()-2);             //Remove the last two characters ", "
     FSMHead.pop_back();                         //This function seems necessary
@@ -86,8 +109,15 @@ string getFSMHead(string& name)
 
 int main()
 {
+    vector<string> lineFile{"Hola", "mundo"};
+	string fileText, sstate;
+    busInfo inputs, outputs;
+    FSMdictionary s;
+	
+    s = getFSMData(sstate, inputs, outputs);
+
     string dummy_module_name = "PEPE";
-    cout << getFSMHead(dummy_module_name);
+    cout << getFSMHead(dummy_module_name, s, inputs, outputs);
 
     return 0;
 }
