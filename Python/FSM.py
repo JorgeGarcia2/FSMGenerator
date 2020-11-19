@@ -66,8 +66,10 @@ class FSM:
 
     #Makes the state logic for the machine
     def getFSMLogic(self,dicS,Ni,No,ppal):
-        FSMSLogic="\n  //Next State Logic Block\n  always@(state)\n  begin\n    case(state)\n"
-        FSMOLogic="\n  //Output Logic Block\n  always@(state)\n  begin\n    case(state)\n"
+        FSMSLogic = "\n  //Next State Logic Block\n  always@(state"
+        for i in Ni: FSMSLogic += " or " + i[0]
+        FSMSLogic += ")\n  begin\n    case(state)\n"
+        FSMOLogic = "\n  //Output Logic Block\n  always@(state)\n  begin\n    case(state)\n"
 
         for S in dicS.keys():
             FSMSLogic += "      " + S + ": begin\n"
