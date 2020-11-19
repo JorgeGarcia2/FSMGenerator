@@ -157,7 +157,7 @@ string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
             FSMSLogic += "        else\n          nextstate = " + ppal + ";\n";
             FSMOLogic += "        else begin\n";
             for (int j=0;j<No.size();j++){
-                if (it->second[0].get_outputs()[0] != "x" and it->second[0].get_outputs()[0] != "X")
+                if (it->second[0].get_outputs()[0] != "x" && it->second[0].get_outputs()[0] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + it->second[0].get_outputs()[0] + ";\n";
                 else FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n";
             }

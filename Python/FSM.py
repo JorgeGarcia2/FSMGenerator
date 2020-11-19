@@ -14,7 +14,7 @@ class FSM:
             print("There is no table!")
         else:
             dictio, NI, NO, ppal = FM.getFSMData(fileName)
-            name = "FSM"
+            name = fileName[:-4]
             self.FSMstr = self.getFSMHead(dictio,name,NI,NO)
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
             self.writeFSM(name,self.FSMstr)
@@ -51,7 +51,7 @@ class FSM:
 
         FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
         
-        delimiter = ' '                      
+        delimiter = ', '
         keys_string = delimiter.join(keys_list)     #Pass the states keys to a string for later use
 
         FSMHead += (");\n\n"
@@ -96,14 +96,14 @@ class FSM:
                     FSMOLogic += "        end\n"
                 FSMOLogic += "\n"
             if (IF):
-                FSMSLogic += "        else\n          nextstate = " + ppal + ";\n"
-                FSMOLogic += "        else begin\n"
+                FSMSLogic += "        else\n          nextstate = " + S + ";\n"
+                """FSMOLogic += "        else begin\n"
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
                         FSMOLogic += "          " + No[j][0] + " = " + dicS[S][0][2][j] + ";\n"
                     else:
                         FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
-                FSMOLogic += "        end\n"
+                FSMOLogic += "        end\n" """
             FSMSLogic += "\n"
             FSMOLogic += "      end\n"
         FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n"
