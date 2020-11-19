@@ -116,7 +116,7 @@ class FSM:
         return FSMSLogic + FSMOLogic
 
     def writeFSM(self,nam,cont):
-        f = open(nam + "_Design.v","w")
+        f = open(nam + "_PyDesign.v","w")
         f.write(cont)
         f.close()
-        print(f"file {nam}_Design.v created succesfully!\n")
+        print(f"file {nam}_PyDesign.v created succesfully!\n")
