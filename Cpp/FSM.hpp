@@ -44,9 +44,9 @@ inline void split(const string& str, vector<string> &cont, char delim)
 }
 
 
-inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo &nameOutputs)
+inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo &nameOutputs, string &tabName)
 {
-    string tabName, lineCont;
+    string lineCont;
     int countRow = 0;
     //, startState;
     stringstream ss;
@@ -173,6 +173,8 @@ inline bool writeFSM(string name, string code)
     bool f = false;
     fstream file;
     file.open(name + "_CppDesign.v",ios::out);
+    file << code;
+    file.close();
     f = true;
     return f;
 }
