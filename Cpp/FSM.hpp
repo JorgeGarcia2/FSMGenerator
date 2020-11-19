@@ -35,16 +35,6 @@ typedef vector<FSMLine> Line_vector;
 typedef map<string, Line_vector> FSMdictionary;
 typedef vector <vector<string>> busInfo;
 
-inline void split(const string& str, vector<string> &cont, char delim)
-{
-    stringstream ss(str);
-    string token;
-    while (getline(ss, token, delim)) {
-        cont.push_back(token);
-    }
-}
-
-
 inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo &nameOutputs, string &tabName)
 {
     string lineCont;

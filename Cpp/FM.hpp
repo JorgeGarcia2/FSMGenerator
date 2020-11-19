@@ -1,5 +1,7 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -41,4 +43,13 @@ inline string getFileCont(string fileName){
     string fileCont = string((istreambuf_iterator<char>(file) ),(istreambuf_iterator<char>()));
     file.close();
     return fileCont;
+}
+
+inline void split(const string& str, vector<string> &cont, char delim)
+{
+    stringstream ss(str);
+    string token;
+    while (getline(ss, token, delim)) {
+        cont.push_back(token);
+    }
 }
