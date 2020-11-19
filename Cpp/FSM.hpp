@@ -75,15 +75,6 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
         //separate inputs and outputs from the current row using "|"as delimeter
         split(cRow[0],cInputs,'|');
         split(cRow[3],cOutputs,'|');
-        cout <<endl<< "Linea "<<countRow<<endl;
-        for(int i = 0; i < cRow.size(); i++)
-            cout << cRow[i] << "|";
-        cout <<endl<< "Entradas "<<endl;
-        for(int i = 0; i < cInputs.size(); i++)
-            cout << cInputs[i] << endl;            
-        cout <<endl<< "Salidas "<<endl;
-        for(int i = 0; i < cOutputs.size(); i++)
-            cout << cOutputs[i] << endl;
         //obtain size bus and radix
         if(countRow == 2){
             for(int i = 0; i < cInputs.size(); i++){
@@ -94,7 +85,6 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
                 //if no bus size is specified, assign 1
                 temp[1] = (temp[1] =="")?"1":temp[1];
                 nameInputs.push_back(temp);
-                cout << nameInputs[i][0] << nameInputs[i][1] << nameInputs[i][2] << endl;
             }
             for(int i = 0; i < cOutputs.size(); i++){
                 regex_search (cOutputs[i],m,reBus);
@@ -104,7 +94,6 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
                 //if no bus size is specified, assign 1
                 temp[1] = (temp[1] =="")?"1":temp[1];
                 nameOutputs.push_back(temp);
-                cout << nameOutputs[i][0] << nameOutputs[i][1] << nameOutputs[i][2] << endl;
             }
         }
         if(countRow > 2){
@@ -186,10 +175,28 @@ string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
     FSMOLogic += "    endcase\n  end\n\nendmodule";
     return FSMSLogic + FSMOLogic;
 }
-/*
-inline string printFSMDict(FSMdictionary dicS){
-    for (auto const& pair: dicS) {
-            
-            output_M.push_back(Port(pair.first,pair.second));
+
+inline void printFSMDict(FSMdictionary dicS){
+    vector<string> tInputs;
+    vector<string> tOutputs;
+    string tNextState;
+
+    for (auto const& pair: dicS) {    
+        cout << "State: " <<pair.first << "\tTransitions: " << dicS[pair.first].size()<<endl;
+        for(int j = 0; j < dicS[pair.first].size(); j++){
+            tInputs = dicS[pair.first][j].get_inputs();
+            tOutputs = dicS[pair.first][j].get_outputs();
+            tNextState = dicS[pair.first][j].get_next_state();
+            for(int i = 0; i < tInputs.size(); i++) 
+                cout << tInputs[i] << ", ";
+            cout << tNextState<<" |";
+            for(int i = 0; i < tOutputs.size(); i++) 
+                cout << tOutputs[i] << " |";
+            cout << endl;
+            tInputs.clear();
+            tOutputs.clear();
         }
-}*/
+        cout << endl;
+    }
+
+}
