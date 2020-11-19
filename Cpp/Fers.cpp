@@ -24,11 +24,12 @@ FSMdictionary={{key,vector{FSMLine(),FSMLine()}}.{key,vector{FSMLine(),FSMLine()
 
 string getFSMHead(string& name, FSMdictionary& States, busInfo& input_list, busInfo& output_list)
 {
-
     for (int i=0; i< input_list.size(); i++)
         cout << "entrada: " << input_list[i][0] << endl;
     for (int i=0; i< output_list.size(); i++)
         cout << "salida: " << output_list[i][0] << endl;
+
+    cout << endl;
 
     vector<string> keys_vector;     //Store the dictionary keys inside the keys_vector for later use
     for(map<string, Line_vector>::iterator it = States.begin(); it != States.end(); ++it)
@@ -46,40 +47,35 @@ string getFSMHead(string& name, FSMdictionary& States, busInfo& input_list, busI
     string FSMHead = "";
 
     FSMHead += "module " + name + "(\n"
-             + "  input reset, clock, \n";
+             + "  input reset, clock,";
 
     unsigned int current_bus_size = 0;          //Create variable for later use
     unsigned int last_bus_size = 0;             //Create variable for later use
 
     if (number_of_inputs > 0)
     {
-        /* for i in input_list:     --> Modelo a seguir
-                if (int(i[1]) > 1):
-                    FSMHead += f"[{int(i[1])-1}:0] "
-                FSMHead += f"{i[0]}, " */
-        
-        for (unsigned int i = 0; i < input_list.size(); i++)
+        for (unsigned int i = 0; i < input_list.size(); i++)    //For all the inputs of the FSM
         {
-            current_bus_size = stoi(input_list[i][1]);       //Store the current bus size
-            if (current_bus_size != last_bus_size)
+            current_bus_size = stoi(input_list[i][1]);      //Store the current bus size
+            if (current_bus_size != last_bus_size)          //In case that the bus size has changed...
             {
-                FSMHead += "  input ";
+                FSMHead += "\n  input ";                    //...a new input declaration is needed
                 if (current_bus_size > 1)
                     FSMHead += "[" + to_string(current_bus_size - 1) + ":0] ";
+                FSMHead += input_list[i][0] + ", ";
             }
-            FSMHead += input_list[i][0] + ",\n";
-            last_bus_size = current_bus_size;
+            else
+                FSMHead += input_list[i][0] + ", ";            
+            last_bus_size = current_bus_size;               //Now store the used bus size as "last bus size"
         }
     }
 
+    FSMHead += "\n";
     current_bus_size = last_bus_size = 0;
-    /* for i in output_list:     --> Modelo a seguir
-            if (int(i[1]) > 1):
-                FSMHead += f"[{int(i[1])-1}:0] " 
-            FSMHead += f"{i[0]}, " */
-    for (unsigned int i = 0; i < output_list.size(); i++)
+
+    for (unsigned int i = 0; i < output_list.size(); i++)       //For all the outputs of the FSM
     {
-        current_bus_size = stoi(output_list[i][1]);       //Store the current bus size
+        current_bus_size = stoi(output_list[i][1]);         //Store the current bus size
         if (current_bus_size != last_bus_size)
         {
             FSMHead += "  output reg ";
@@ -115,6 +111,21 @@ int main()
     FSMdictionary s;
 	
     s = getFSMData(sstate, inputs, outputs);
+
+    /*for (int i=0; i< inputs.size(); i++)
+    {
+        cout << "entrada: " << inputs[i][0] << endl;
+        cout << "tamanio: " << inputs[i][1] << endl;
+        cout << "radix: " << inputs[i][2] << endl;
+    }
+    cout << endl;
+    for (int i=0; i< outputs.size(); i++)
+    {
+        cout << "salida: " << outputs[i][0] << endl;
+        cout << "tamanio: " << outputs[i][1] << endl;
+        cout << "radix: " << outputs[i][2] << endl;
+    }
+    cout << endl;*/
 
     string dummy_module_name = "PEPE";
     cout << getFSMHead(dummy_module_name, s, inputs, outputs);
