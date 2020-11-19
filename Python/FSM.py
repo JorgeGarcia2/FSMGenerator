@@ -103,6 +103,8 @@ class FSM:
                 FSMOLogic += "        else begin\n"
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
+                        FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + dicS[S][0][2][j] + ";\n"
+                    else: #Simón???????????????????????????
                         FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
                 FSMOLogic += "        end\n"
             FSMSLogic += "      end\n"

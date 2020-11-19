@@ -5,8 +5,7 @@
 
 using namespace std;
 
-inline string getFileName(string suf, string key, string def)
-{
+inline string getFileName(string suf, string key, string def){
     ifstream file;
     string fName;
     while (1){

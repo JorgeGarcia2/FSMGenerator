@@ -5,8 +5,7 @@
 
 using namespace std;
 
-class FSMLine
-{
+class FSMLine{
     public:
         //Constructor
         FSMLine(vector<string> inputs, string next_state, vector<string> outputs)
