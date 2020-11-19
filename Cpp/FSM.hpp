@@ -146,7 +146,7 @@ string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
                 FSMSLogic += Temp + ")\n";
             }
             FSMSLogic += "          nextstate = " + i.get_next_state() + ";\n\n";
-            for (int j;j<No.size();j++){
+            for (int j=0;j<No.size();j++){
                 if (i.get_outputs()[j] != "x" and i.get_outputs()[j] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + i.get_outputs()[j] + ";\n";
             }

@@ -1,8 +1,7 @@
 #include "FSM.hpp"
-#include "FM.hpp"
 #include <map>
 
-string getFSMLogic(FSMdictionary dicS, vector<string[3]> Ni, vector<string[3]> No,string ppal){
+string getFSMLogica(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
     string FSMOLogic, FSMSLogic;
     FSMSLogic = "\n  //Next State Logic Block\n  always@(state";
     for (int i=0;i<Ni.size();i++) FSMSLogic += " or " + Ni[i][0];
@@ -33,7 +32,10 @@ string getFSMLogic(FSMdictionary dicS, vector<string[3]> Ni, vector<string[3]> N
                 FSMSLogic += Temp + ")\n";
             }
             FSMSLogic += "          nextstate = " + i.get_next_state() + ";\n\n";
-            for (int j;j<No.size();j++){
+            cout << "Haya" << endl;
+            for (int j=0;j<No.size();j++){
+                //PROBLEMAAAAAAAAAAAAAAAAAAAAAAAAAa
+                cout << "Halp!!: " << i.get_outputs()[j] << endl;
                 if (i.get_outputs()[j] != "x" and i.get_outputs()[j] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + i.get_outputs()[j] + ";\n";
             }
@@ -45,7 +47,7 @@ string getFSMLogic(FSMdictionary dicS, vector<string[3]> Ni, vector<string[3]> N
             FSMOLogic += "        else begin\n";
             for (int j=0;j<No.size();j++){
                 if (it->second[0].get_outputs()[0] != "x" and it->second[0].get_outputs()[0] != "X")
-                    FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + it->second[0].get_outputs()[0] + ";\n";
+                    FSMOLogic += "          " + No[j][0] + " = " + it->second[0].get_outputs()[0] + ";\n";
                 else FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n";
             }
             FSMOLogic += "        end\n";
@@ -69,16 +71,25 @@ string writeFSM()
     return "";
 }
 
-int main (){
-    string FSMCode, tabName, tabCont;
-    FSMdictionary States = {{"S0",{FSMLine({"1","2","3"},"S0",{"11","12","13"}),FSMLine({"4","5","6"},"S1",{"14","15","16"})}},
-                      {"S1",{FSMLine({"7","8","9"},"S1",{"17","18","19"}),FSMLine({"0","a","b"},"S0",{"10","1a","1b"})}}};
-    tabName = getFileName("csv","_Design","../FSMTable.csv");
-    tabCont = getFileCont(tabName);
-    //vector<string[3]> NI={{"In1","4","h"},{"In2","5","d"},{"In3","1","b"}};
-    //vector<string[3]> NO={{"Out1","4","h"},{"Out2","4","h"},{"Out3","4","h"}};
-    //FSMCode = getFSMLogic(States,NI,NO,"S0");
-    cout << tabCont;
+int main(){
+	string fileText, sstate, FSMCode;
+    busInfo inputs, outputs;
+    FSMdictionary s;
+	
+    s = getFSMData(sstate, inputs, outputs);
+
+    system("clear");
+
+    for(auto i:s){
+        cout << i.first << ":\nOutputs: \n";
+        for(auto j:i.second){
+            for (auto k:j.get_outputs())  cout << "\t" << k << ", ";
+            cout << endl;
+        }
+        cout << endl;
+    }
+    FSMCode = "";
+    FSMCode = getFSMLogica(s,inputs,outputs,sstate);
+
     cout << endl << FSMCode;
-    return 0;
 }
