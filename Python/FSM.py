@@ -32,22 +32,31 @@ class FSM:
         required_state_bits = math.ceil(math.log(number_of_states, 2))  #Required number of bits to encode the different states
         
         FSMHead =   (f"module {name}(\n"
-                    "  input reset, clock,\n")
+                    "  input reset, clock,")
+
+        current_bus_size = 0        #Create variable for later use
+        last_bus_size = 0           #Create variable for later use
 
         if (number_of_inputs > 0):
-            FSMHead += "  input "
             for i in input_list:
-                if (int(i[1]) > 1):
-                    FSMHead += f"[{int(i[1])-1}:0] "
+                current_bus_size = int(i[1])
+                if (current_bus_size != last_bus_size):
+                    FSMHead += "\n  input "
+                    if (current_bus_size > 1):
+                        FSMHead += f"[{current_bus_size-1}:0] "
                 FSMHead += f"{i[0]}, "
-            FSMHead += "\n"
+                last_bus_size = current_bus_size
         
-        FSMHead += "  output reg "
+        current_bus_size = last_bus_size = 0
 
         for i in output_list:
-            if (int(i[1]) > 1):
-                FSMHead += f"[{int(i[1])-1}:0] " 
+            current_bus_size = int(i[1])
+            if (current_bus_size != last_bus_size):
+                FSMHead += "\n  output reg "
+                if (current_bus_size > 1):
+                    FSMHead += f"[{current_bus_size-1}:0] " 
             FSMHead += f"{i[0]}, "
+            last_bus_size = current_bus_size
 
         FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
         
