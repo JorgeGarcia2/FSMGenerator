@@ -188,7 +188,7 @@ inline void printFSMDict(FSMdictionary dicS){
             tOutputs = dicS[pair.first][j].get_outputs();
             tNextState = dicS[pair.first][j].get_next_state();
             for(int i = 0; i < tInputs.size(); i++) 
-                cout << tInputs[i] << ", ";
+                cout << tInputs[i] << "| ";
             cout << tNextState<<" |";
             for(int i = 0; i < tOutputs.size(); i++) 
                 cout << tOutputs[i] << " |";
