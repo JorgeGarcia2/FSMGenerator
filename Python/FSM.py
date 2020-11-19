@@ -14,8 +14,7 @@ class FSM:
             print("There is no table!")
         else:
             dictio, NI, NO, ppal = FM.getFSMData(fileName)
-            name = fileName.split("/")[-1].split(".")[-2]
-            print(name)
+            name = fileName[:-4]
             self.FSMstr = self.getFSMHead(dictio,name,NI,NO)
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
             self.writeFSM(name,self.FSMstr)
@@ -52,7 +51,7 @@ class FSM:
 
         FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
         
-        delimiter = ' '                      
+        delimiter = ', '
         keys_string = delimiter.join(keys_list)     #Pass the states keys to a string for later use
 
         FSMHead += (");\n\n"
