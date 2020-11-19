@@ -72,7 +72,7 @@ class FSM:
         FSMOLogic = "\n  //Output Logic Block\n  always@(state)\n  begin\n    case(state)\n"
 
         for S in dicS.keys():
-            FSMSLogic += "      " + S + ": begin\n"
+            FSMSLogic += "      " + S + ":\n"
             FSMOLogic += "      " + S + ": begin\n"
             IF = False
             for i in range(len(dicS[S])):
@@ -86,10 +86,7 @@ class FSM:
                         f=True
                 if (Temp != "        if("):
                     IF = True
-                    if (len(No) > 1):
-                        FSMOLogic += Temp + ") begin\n"
-                    else:
-                        FSMOLogic += Temp + ")\n"
+                    FSMOLogic += Temp + ") begin\n"
                     FSMSLogic += Temp + ")\n"
                 FSMSLogic += "          nextstate = " + dicS[S][i][1] + ";\n\n"
                 for j in range(len(No)):
@@ -104,10 +101,10 @@ class FSM:
                 for j in range(len(No)):
                     if (dicS[S][0][2][j] != "x" and dicS[S][0][2][j] != "X"):
                         FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + dicS[S][0][2][j] + ";\n"
-                    else: #Simón???????????????????????????
+                    else:
                         FSMOLogic += "          " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n"
                 FSMOLogic += "        end\n"
-            FSMSLogic += "      end\n"
+            FSMSLogic += "\n"
             FSMOLogic += "      end\n"
         FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n"
         FSMOLogic += "      default: begin\n"
