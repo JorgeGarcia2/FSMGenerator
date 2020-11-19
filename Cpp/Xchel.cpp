@@ -73,7 +73,7 @@ int main (){
     string FSMCode, tabName, tabCont;
     FSMdictionary States = {{"S0",{FSMLine({"1","2","3"},"S0",{"11","12","13"}),FSMLine({"4","5","6"},"S1",{"14","15","16"})}},
                       {"S1",{FSMLine({"7","8","9"},"S1",{"17","18","19"}),FSMLine({"0","a","b"},"S0",{"10","1a","1b"})}}};
-    tabName = getFileName("csv","_Design","Table.csv");
+    tabName = getFileName("csv","_Design","../FSMTable.csv");
     tabCont = getFileCont(tabName);
     //vector<string[3]> NI={{"In1","4","h"},{"In2","5","d"},{"In3","1","b"}};
     //vector<string[3]> NO={{"Out1","4","h"},{"Out2","4","h"},{"Out3","4","h"}};

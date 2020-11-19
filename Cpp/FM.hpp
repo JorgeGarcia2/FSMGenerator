@@ -1,7 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <map>
-#include <vector>
 
 using namespace std;
 
@@ -24,6 +22,7 @@ inline string getFileName(string suf, string key, string def){
             if (!file) cout << "default file \"" + def + "\" not found!\n";
             else{
                 cout << "default file \"" + def + "\" found, using it!\n";
+                fName = def;
                 break;
             }
         }else{
