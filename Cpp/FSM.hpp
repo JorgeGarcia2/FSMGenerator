@@ -168,7 +168,7 @@ string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
     }
     FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n";
     FSMOLogic += "      default: begin\n";
-    for (int j; j<No.size();j++)
+    for (int j=0; j<No.size();j++)
         FSMOLogic += "        " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n";
     FSMOLogic += "      end\n";
     FSMSLogic += "    endcase\n  end\n";
