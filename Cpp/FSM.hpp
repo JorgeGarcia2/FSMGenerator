@@ -233,6 +233,7 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
     return FSMSLogic + FSMOLogic;
 }
 
+// Function for writing the code to a file with termination "_CppDesign.v"
 inline bool writeFSM(string name, string code)
 {
     bool f = false;
@@ -244,20 +245,28 @@ inline bool writeFSM(string name, string code)
     return f;
 }
 
+// Function for printing easy to read format of the dictionary
 inline void printFSMDict(FSMdictionary dicS){
     vector<string> tInputs;
     vector<string> tOutputs;
     string tNextState;
 
-    for (auto const& pair: dicS) {    
+    // Iterate over the keys of the fictionary
+    for (auto const& pair: dicS) {
+        // Print the state and number of transitions
         cout << "State: " <<pair.first << "\tTransitions: " << dicS[pair.first].size()<<endl;
+
+        // Iterate over the vector of each key
         for(int j = 0; j < dicS[pair.first].size(); j++){
             tInputs = dicS[pair.first][j].get_inputs();
             tOutputs = dicS[pair.first][j].get_outputs();
             tNextState = dicS[pair.first][j].get_next_state();
+            // Print inputs
             for(int i = 0; i < tInputs.size(); i++) 
                 cout << tInputs[i] << "| ";
+            // Print next state
             cout << tNextState<<" |";
+            // Print outputs
             for(int i = 0; i < tOutputs.size(); i++) 
                 cout << tOutputs[i] << " |";
             cout << endl;
