@@ -190,7 +190,7 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
     FSMOLogic = "\n  //Output Logic Block\n  always@(state)\n  begin\n    case(state)\n";
 
     for(FSMdictionary::iterator it = dicS.begin(); it != dicS.end(); ++it){
-        FSMSLogic += "      " + it->first + ": begin\n";
+        FSMSLogic += "      " + it->first + ":\n";
         FSMOLogic += "      " + it->first + ": begin\n";
         bool IF = false, f;
         string Temp = "";
@@ -222,7 +222,6 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
         if (IF){
             FSMSLogic += "        else\n          nextstate = " + it->first + ";\n";
         }
-        FSMSLogic += "      end\n";
         FSMOLogic += "      end\n";
     }
     FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n";
