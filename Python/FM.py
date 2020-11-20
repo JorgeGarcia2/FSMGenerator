@@ -7,7 +7,7 @@ import os
 gsuf = ""
 gkey = ""
 
-#Prompts for valid file name and assigns file text to string
+# Prompts for valid file name and assigns file text to string
 def getFileCont(suf,key):
     global gsuf
     global gkey
@@ -23,58 +23,58 @@ def getFileName(suf = "",key = ""):
         suf = gsuf
         key = gkey
     fileCont = "y"
-    #Check if the user wants to continue trying new file names
+    # Check if the user wants to continue trying new file names
     while(fileCont == "Y" or fileCont == "y"):
         fileCont = ""
         fileName = input("\nWhat is the top model's filename?\n(This program only searches for "+suf+" estensions) ")
         
-        #If file has no extension, apend .suf
+        # If file has no extension, apend .suf
         if (fileName.find(".") == -1): 
             fileName = fileName + "." + suf
 
-        #Try to open the file
+        # Try to open the file
         try: 
             f = open(fileName,"r")
             fileCont = "AnitalavalatinA"
             f.close()
         except:
-            #Get the path of the file the user is trying to access and warn of inexistent file
+            # Get the path of the file the user is trying to access and warn of inexistent file
             match = re.search(r"^((\w+\/)*).*$", fileName)
             print(match.group(1))
             print(f"The {fileName} file was not found or you do not have read permissions")
 
-            #If there was a path, use it
-            #else, use working directory
+            # If there was a path, use it
+            # else, use working directory
             if(match.group(1) != ""): fileName=match.group(1)
             else: fileName = "./"
-            #Check if the path entered is found
+            # Check if the path entered is found
             if(os.path.isdir(fileName)):
-                #Get files in the directory
+                # Get files in the directory
                 for file in os.listdir(fileName):
 
-                    #Check if there are files that do not contain the key of the program's output
-                    #but do contain the same extension as the needed input
+                    # Check if there are files that do not contain the key of the program's output
+                    # but do contain the same extension as the needed input
                     if(re.search(r"^\w((?!"+key+r").)*\."+suf+"$", file)):
                         fileName += file
 
-                        #Ask user if he wants to use the file
+                        # Ask user if he wants to use the file
                         print("\nDesign file found, do you want to use: "+fileName+"?(Y,N)")
                         t=input()
                         if t!="n" and t!="N":
 
-                            #If it's going to be used, fill fileCont with a non-empty string
+                            # If it's going to be used, fill fileCont with a non-empty string
                             print(f"File {fileName} will be used!")
                             fileCont = "AnitalavalatinA"
                             break
                         else:
-                            #If file is not going to be used, keep searching for files
+                            # If file is not going to be used, keep searching for files
                             if(match.group(1) != ""): fileName=match.group(1)
                             else: fileName = "./"
                             print("File not used!")
             else:
                 print("The specified path was not found")
         
-        #If the program does not find the file, ask to try again
+        # If the program does not find the file, ask to try again
         if (fileCont == ""):
             fileCont = input("\nDo you want to try again? (Y/N)\n")
             if (fileCont == "N" or fileCont == "n"):
@@ -83,68 +83,68 @@ def getFileName(suf = "",key = ""):
             else: fileCont = "y"
     return fileName
 
-#Function to get data from the table
+# Function to get data from the table
 def getFSMData(path):
-    states = {}                              #Dictionary for states: [inputs, Next state, outputs]  
-    NameInputs = []                          #List of input names
-    NameOutputs = []                         #List of input names
-    firstState = ""                          #Initialize the default state
-    regex = r"^(\w+)\((\d+)((b|h|d)|.*)\)$"  #Initialize RegEx for the table header
+    states = {}                              # Dictionary for states: [inputs, Next state, outputs]  
+    NameInputs = []                          # List of input names
+    NameOutputs = []                         # List of input names
+    firstState = ""                          # Initialize the default state
+    regex = r"^(\w+)\((\d+)((b|h|d)|.*)\)$"  # Initialize RegEx for the table header
     tempIn = []
     tempOut = []
 
-    #Open the file
+    # Open the file
     with open(path, 'r') as file:
 
-        #Read the file as a csv table
+        # Read the file as a csv table
         reader = csv.reader(file)
         i = 0
 
-        #Iterate over rows
+        # Iterate over rows
         for row in reader:
             i += 1
 
-            #Get inputs and outputs
+            # Get inputs and outputs
             tempIn = row[0].split("|")
             tempOut = row[3].split("|")
             
-            #If the second row is being read, get information about inputs and outputs
+            # If the second row is being read, get information about inputs and outputs
             if (i==2): 
 
-                #Get input names, size and radix
+                # Get input names, size and radix
                 for elemet in tempIn:
                     match = re.search(regex,elemet)
                     NameInputs.append([match.group(1), match.group(2), match.group(4)])
 
-                #Get input names, size and radix
+                # Get input names, size and radix
                 for elemet in tempOut:
                     match = re.search(regex,elemet)
                     NameOutputs.append([match.group(1), match.group(2), match.group(4)])
 
-            #If the read row is below the second row, get values
+            # If the read row is below the second row, get values
             if (i>2):
                 #Get first state read
                 if(i == 3): firstState = row[2]
-                #InputValue = [size]'[radix][value]
+                # InputValue = [size]'[radix][value]
                 for j in range(len(tempIn)):
 
-                    #if radix was not specified, "d" by default
+                    # if radix was not specified, "d" by default
                     if (tempIn[j] != "x" and tempIn[j] != "X"):
                         if (NameInputs[j][2] == None): NameInputs[j][2] = "d"
                         tempIn[j] = NameInputs[j][1] + "'" + NameInputs[j][2] + tempIn[j]
 
-                #OutputValue = [size]'[radix][value]
+                # OutputValue = [size]'[radix][value]
                 for j in range(len(tempOut)):
                     if (tempOut[j] != "x" and tempOut[j] != "X"):
                         if (NameOutputs[j][2] == None): NameOutputs[j][2] = "d"
                         tempOut[j] = NameOutputs[j][1] + "'" + NameOutputs[j][2] + tempOut[j]
 
-                #If key doesn't exist, create
-                #else, append the values read
+                # If key doesn't exist, create
+                # else, append the values read
                 if(states.get(row[1]) == None): 
                     states[row[1]] = [[tempIn, row[2], tempOut]]
                 else: 
                     states[row[1]].append([tempIn, row[2], tempOut])
 
-    #Return states dictionary, nameInputs matrix, NameOutputs matrix and firstState string
+    # Return states dictionary, nameInputs matrix, NameOutputs matrix and firstState string
     return states, NameInputs, NameOutputs, firstState

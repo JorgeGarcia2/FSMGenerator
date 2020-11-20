@@ -1,5 +1,6 @@
 #!/bin/python3
 
+# import math and custom file manager modules
 import math
 import FM
 
@@ -7,16 +8,27 @@ class FSM:
 
     FSMstr = ""
 
+    # Constructor
     def __init__(self):
+
+        # Get a valid file name prompting the user and
+        # searching in directories
         fileName = FM.getFileName("csv","_Design")
 
+        # If a valid file was found, continue
         if (fileName == ""):
             print("There is no table!")
         else:
+
+            # Get data from file
             dictio, NI, NO, ppal = FM.getFSMData(fileName)
+            # Get the path of the file and the name without extension
             name = fileName[:-4]
+            # Get the string value of the code header
             self.FSMstr = self.getFSMHead(dictio,name,NI,NO)
+            # Get the string value of the logic code
             self.FSMstr += self.getFSMLogic(dictio,NI,NO,ppal)
+            # Write the code to a new file
             self.writeFSM(name,self.FSMstr)
 
     #Creates the Verilog design file's header (TOP module with inputs, outputs and states)
