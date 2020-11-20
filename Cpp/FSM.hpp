@@ -181,55 +181,87 @@ inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_lis
     return FSMHead;
 }
 
+// Function for getting the string of the next state and output logic of the FSM
 inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
     string FSMOLogic, FSMSLogic;
+
+    // Initialize state logic block with an always sensitive to the current state and the inputs
     FSMSLogic = "\n  // Next State Logic Block\n  always@(state";
     for (int i=0;i<Ni.size();i++) FSMSLogic += " or " + Ni[i][0];
     FSMSLogic += ")\n  begin\n    case(state)\n";
+    // Initialize state logic block with an always sensitive to the current state
     FSMOLogic = "\n  // Output Logic Block\n  always@(state)\n  begin\n    case(state)\n";
 
+    // Iterate over dictionary keys
     for(FSMdictionary::iterator it = dicS.begin(); it != dicS.end(); ++it){
+        
+        // Append the key as a case without begin in state logic for better readability
         FSMSLogic += "      " + it->first + ":\n";
         FSMOLogic += "      " + it->first + ": begin\n";
+        
+        // Initialize no if found and iterate over input values
         bool IF = false, f;
         string Temp = "";
-
         for (auto i:it->second){
+            
+            // If an if was found before, continue with else if instead of an if
             if (IF) Temp = "        else if(";
             else Temp = "        if(";
+            
+            // Initialize found conditions as false
             f = false;
             for(int j=0;j<Ni.size();j++){
                 if (i.get_inputs()[j] != "x" and i.get_inputs()[j] != "X"){
+                    
+                    // If there was a condition before, append an "&&"
                     if (f) Temp += " && ";
                     Temp += Ni[j][0] + " == " + i.get_inputs()[j];
                     f = true;
                 }
             }
-            if (Temp != "        if("){
+            // If conditions were found, append the conditions
+            if (IF){
                 IF = true;
                 FSMOLogic += Temp + ") begin\n";
                 FSMSLogic += Temp + ")\n";
             }
+            
+            // Append the next state depending on the current state and the conditions
             FSMSLogic += "          nextstate = " + i.get_next_state() + ";\n\n";
+            
+            // Append the output values for all outputs depending on the current state and the conditions
             for (int j=0;j<No.size();j++){
                 if (i.get_outputs()[j] != "x" and i.get_outputs()[j] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + i.get_outputs()[j] + ";\n";
             }
+            
+            // If there was an if clause, append the end to the output logic
             if (IF) FSMOLogic += "        end\n";
             FSMOLogic += "\n";
         }
+        
+        // If there was an if found, finish next state logic with
+        // else going to the same current state
         if (IF){
             FSMSLogic += "        else\n          nextstate = " + it->first + ";\n";
         }
         FSMOLogic += "      end\n";
     }
+    
+    // Append default state cases
     FSMSLogic += "      default:\n        nextstate = " + ppal + ";\n";
     FSMOLogic += "      default: begin\n";
+    
+    // Append all values of outputs
     for (int j=0; j<No.size();j++)
         FSMOLogic += "        " + No[j][0] + " = " + No[j][1] + "'" + No[j][2] + "0;\n";
+    
+    // Finish the next state and output logic block strings
     FSMOLogic += "      end\n";
     FSMSLogic += "    endcase\n  end\n";
     FSMOLogic += "    endcase\n  end\n\nendmodule";
+    
+    // Return sum of both strings
     return FSMSLogic + FSMOLogic;
 }
 
