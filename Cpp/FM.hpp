@@ -37,18 +37,28 @@ inline string getFileName(string suf, string key, string def){
     return fName;
 }
 
+//Function to get the contents of a file in string format
 inline string getFileCont(string fileName){
     ifstream file;
+
+    //Open file
     file.open(fileName,ios::in);
+
+    //Get content
     string fileCont = string((istreambuf_iterator<char>(file) ),(istreambuf_iterator<char>()));
+
+    //Close file
     file.close();
     return fileCont;
 }
 
+//Function to get vector of strings by splitting a string using delimeter
 inline void split(const string& str, vector<string> &cont, char delim)
 {
     stringstream ss(str);
     string token;
+
+    //Get the vector elements from the values before the delimeter
     while (getline(ss, token, delim)) {
         cont.push_back(token);
     }

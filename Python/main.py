@@ -2,4 +2,5 @@
 
 from FSM import FSM
 
+#Create new FSM object
 my_FSM = FSM()

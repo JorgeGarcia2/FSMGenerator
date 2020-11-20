@@ -33,8 +33,6 @@ def getFileName(suf = "",key = ""):
         try: 
             f = open(fileName,"r")
             fileCont = "Hola"
-            #fileCont = f.read()
-            #print(f"File {fileName} read successfully")
             f.close()
         except:
             match = re.search(r"^((\w+\/)*).*$", fileName)
@@ -52,8 +50,6 @@ def getFileName(suf = "",key = ""):
                             print(f"File {fileName} will be used!")
                             f = open(fileName,"r")
                             fileCont = "Hola"
-                            #fileCont = f.read()
-                            #print(f"File {fileName} read successfully")
                             f.close()
                             break
                         else:
