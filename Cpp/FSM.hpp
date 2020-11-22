@@ -249,8 +249,29 @@ inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_lis
     return FSMHead;
 }
 
-// Function for getting the string of the next state and output logic of the FSM
-inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
+/**************************************************************************************************
+#   Function:
+#       getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal).
+#
+#   Description:
+#       This function creates the Verilog code for the next state and output block for a Finite 
+#       State Machine based on the information provided by the arguments.
+#
+#   Precondition:
+#       This function must be called after getFSMHead function to continue with the FSM code.
+#
+#   Parameters:
+#       * dicS - Dictionary with information about states transitions.
+#       * ppal - FSM Principal state.
+#       * Ni - A vector of vectors of strings containing the inputs names with its radix and bus size.
+#       * No - A vector of vectors of strings containing the outputs names with its radix and bus size.
+#
+#    Return Value:
+#       * FSMSLogic + FSMOLogic - concatenation of the FSMSLogic and FSMOLogic strings 
+#           which contain the verilog code for the Next State and Output blocks respectively.
+**************************************************************************************************/
+inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal)
+{
     string FSMOLogic, FSMSLogic;
 
     // Initialize state logic block with an always sensitive to the current state and the inputs
