@@ -152,7 +152,7 @@ def getFSMData(path):
             # If the read row is below the second row, get values
             if (i>2):
                 #Get the first state read
-                if(i == 3): firstState = row[2]
+                if(i == 3): firstState = row[1]
                 # InputValue = [size]'[radix][value]
                 # OutputValue = [size]'[radix][value]
                     # if size was not specified, "1" by default
