@@ -4,7 +4,6 @@ import csv
 import re
 import os
 
-
 #**************************************************************************************************
 #   Function:
 #       getFileName(suf = "",key = "").
@@ -28,11 +27,11 @@ import os
 #**************************************************************************************************
 def getFileName(suf = "",key = ""):
     
-    fileCont = "y"
+    fileCont = True
     # Check if the user wants to continue trying new file names
-    while(fileCont == "Y" or fileCont == "y"):
-        fileCont = ""
-        fileName = input("\nWhat is the top model's filename?\n(This program only searches for "+suf+" estensions) ")
+    while(fileCont):
+        fileCont = False
+        fileName = input("\nWhat is your "+suf.upper()+"'s filename? ")
         
         # If file has no extension, apend .suf
         if (fileName.find(".") == -1): 
@@ -41,7 +40,7 @@ def getFileName(suf = "",key = ""):
         # Try to open the file
         try: 
             f = open(fileName,"r")
-            fileCont = "AnitalavalatinA"
+            fileCont = True
             f.close()
         except:
             # Get the path of the file the user is trying to access and warn of inexistent file
@@ -64,13 +63,13 @@ def getFileName(suf = "",key = ""):
                         fileName += file
 
                         # Ask user if he wants to use the file
-                        print("\nDesign file found, do you want to use: "+fileName+"?(Y,N)")
-                        t=input()
+                        t=input("\n"+suf.upper()+" file found, do you want to use: "+fileName+" (Y,N)? ")
+                        
                         if t!="n" and t!="N":
 
                             # If it's going to be used, fill fileCont with a non-empty string
                             print(f"File {fileName} will be used!")
-                            fileCont = "AnitalavalatinA"
+                            fileCont = True
                             break
                         else:
                             # If file is not going to be used, keep searching for files
@@ -81,12 +80,13 @@ def getFileName(suf = "",key = ""):
                 print("The specified path was not found")
         
         # If the program does not find the file, ask to try again
-        if (fileCont == ""):
-            fileCont = input("\nDo you want to try again? (Y/N)\n")
-            if (fileCont == "N" or fileCont == "n"):
+        if (fileCont == False):
+            t = input("\nDo you want to try again (Y/N)? ")
+            if (t == "N" or t == "n"):
                 fileName = ""
-                fileCont = ""
-            else: fileCont = "y"
+                fileCont = False
+            else: fileCont = True
+        else: fileCont = False
     return fileName
 
 #**************************************************************************************************
