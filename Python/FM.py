@@ -140,7 +140,9 @@ def getFSMData(path):
                 # Get input names, size and radix
                 for elemet in tempIn:
                     match = re.search(regex,elemet)
-                    NameInputs.append([match.group(1), match.group(3), match.group(5)])
+                    # If the FSM has inputs, append the corresponding data
+                    if (match != None):
+                        NameInputs.append([match.group(1), match.group(3), match.group(5)])              
 
                 # Get output names, size and radix
                 for elemet in tempOut:
