@@ -114,6 +114,14 @@ inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_lis
         keys_vector.push_back(it->first);
     }
 
+    //Call the sort function with the third parameter to accomodate elements in keys_vector in ascending numerical order
+    sort(begin(keys_vector), end(keys_vector), [](const string& s1, const string& s2)
+    {
+        if (s1.size() != s2.size())
+            return (s1.length() < s2.length());
+        return (s1 < s2);
+    });
+
     // States[keys_vector[i]][j] gets the j-esim object of type FSMLine, whose key is keys_vector[i]
     unsigned int number_of_inputs = States[keys_vector[0]][0].get_inputs().size();
     unsigned int number_of_outputs = States[keys_vector[0]][0].get_outputs().size();
