@@ -15,7 +15,7 @@ else:
 		# Get data from file
 		dictio, NI, NO, ppal = FM.getFSMData(fileName)
 		# Get the path of the file and the name without extension
-		name = fileName[:-4]
+		name = fileName.split("/")[-1][:-4]
 		# Get the string value of the code header
 		FSMstr = FSM.getFSMHead(dictio,name,NI,NO)
 		# Get the string value of the logic code

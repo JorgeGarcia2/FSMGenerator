@@ -35,7 +35,7 @@ class Testbench:
         #Try to open file
         try: 
             f = open(fileName,"r")
-            self.designCode = f.read()
+            self.designCode = " " + f.read()
             print("File read successfully")
             f.close()
         except:
@@ -54,7 +54,7 @@ class Testbench:
                         if t!="n" and t!="N":
                             print(f"File {fileName} will be used!")
                             f = open(fileName,"r")
-                            self.designCode = " "+f.read()
+                            self.designCode = " " + f.read()
                             print(f"File {fileName} read successfully")
                             f.close()
                             break
@@ -99,6 +99,7 @@ class Testbench:
                 ran=["","0","0",""]
                 
             #If it's the module, get name
+            print(match.group(2) + names[0])
             if (match.group(2).replace(' ','') == "module"): self.module_name = names[0]
             else:
                 #Else, check if there are operations in the range, if so, calculate them and get vinteger values
