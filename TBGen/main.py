@@ -1,31 +1,22 @@
-#!/bin/python3.6
-import os
+#!/bin/python3
+
 from Testbench import Testbench
-from time import sleep
 
+my_testbench = Testbench()
 
-# The screen clear function
-def screen_clear():
-    sleep(2)
-    # for mac and linux(os.name is 'posix')
-    if os.name == 'posix':
-        _ = os.system('clear')
-    else:
-    # for windows platfrom
-        _ = os.system('cls')
-
-
-my_testench = Testbench()
 response = "Y"
+#Check if the user wants to continue trying new file names
 while(response != "N" and response != "n"):
-    screen_clear()
-    if(my_testench.getFile()):
-        screen_clear()
-        my_testench.getData()
-        screen_clear()
-        my_testench.createTB()
-        break
+    #If the program finds the file, continue
+    if(my_testbench.getFile()):
+        #Get data from verilog source file
+        my_testbench.getData()
+        #Print contents of translator
+        my_testbench.print()
+        #Create testbench with information found
+        my_testbench.createTB()
+        #Do not iterate again (Purpose finished)
+        response="n"
     else:
+    #If the program does not find the file, ask to try again
         response = input("\nDo you want to try again? (Y/N)\n")
-        
-    
