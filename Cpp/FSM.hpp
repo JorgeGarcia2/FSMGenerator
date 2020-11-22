@@ -398,11 +398,10 @@ inline bool writeFSM(string name, string code)
 #       None.
 #
 #   Parameters:
-#       * name - Name of the Verilog file to create.
-#       * code - String containing the entire Verilog file.
+#       * dicS - FSMdictionary to print.
 #
 #    Return Value:
-#       * f - a boolean variable shifted to "true" after the successful creation of the Verilog design file.
+#       * None.
 **************************************************************************************************/
 inline void printFSMDict(FSMdictionary dicS){
     vector<string> tInputs;
