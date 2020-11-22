@@ -354,7 +354,28 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
     return FSMSLogic + FSMOLogic;
 }
 
-// Function for writing the code to a file with termination "_CppDesign.v"
+/**************************************************************************************************
+#   Function:
+#       writeFSM(string name, string code).
+#
+#   Description:
+#       This function creates the Finite State Machine's Verilog design file.
+#       It appends the key '_CppDesign' to make a distinction between the Python
+#       and the C++ FSM generators.
+#       It begins by Creating a file with the given name for writing purposes.
+#       It then writes the contents of all the strings created throughout the program.
+#       It finishes by closing the file and returning a value of "true".
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * name - Name of the Verilog file to create.
+#       * code - String containing the entire Verilog file.
+#
+#    Return Value:
+#       * f - a boolean variable shifted to "true" after the successful creation of the Verilog design file.
+**************************************************************************************************/
 inline bool writeFSM(string name, string code)
 {
     bool f = false;
@@ -366,7 +387,23 @@ inline bool writeFSM(string name, string code)
     return f;
 }
 
-// Function for printing easy to read format of the dictionary
+/**************************************************************************************************
+#   Function:
+#       printFSMDict(FSMdictionary dicS).
+#
+#   Description:
+#       This function prints the contents of the Map in an easy-to-read format for the user.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * name - Name of the Verilog file to create.
+#       * code - String containing the entire Verilog file.
+#
+#    Return Value:
+#       * f - a boolean variable shifted to "true" after the successful creation of the Verilog design file.
+**************************************************************************************************/
 inline void printFSMDict(FSMdictionary dicS){
     vector<string> tInputs;
     vector<string> tOutputs;
