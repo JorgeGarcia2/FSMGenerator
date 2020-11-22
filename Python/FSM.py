@@ -187,8 +187,28 @@ def getFSMLogic(dicS,Ni,No,ppal):
     # Return sum of both strings
     return FSMSLogic + FSMOLogic
 
-# Function to write string to the file with the key PyDesign
-# for better organization and v extension
+#**************************************************************************************************
+#   Function:
+#       writeFSM(nam,cont).
+#
+#   Description:
+#       This function creates the Finite State Machine's Verilog design file.
+#       It appends the key '_PyDesign' to make a distinction between the Python
+#       and the C++ FSM generators.
+#       It begins by Creating a file with the given name for writing purposes.
+#       It then writes the contents of all the strings created throughout the program.
+#       It finishes by closing the file and printing the successful creation of the file.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * nam - Name of the Verilog file to create.
+#       * cont - String containing the entire Verilog file.
+#
+#    Return Value:
+#       None.
+#**************************************************************************************************
 def writeFSM(nam,cont):
     f = open(nam + "_PyDesign.v","w")
     f.write(cont)
