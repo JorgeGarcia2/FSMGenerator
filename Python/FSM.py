@@ -31,23 +31,28 @@ class FSM:
             # Write the code to a new file
             self.writeFSM(name,self.FSMstr)
 
-    #Creates the Verilog design file's header (TOP module with inputs, outputs and states)
+    # Creates the Verilog design file's header (TOP module with inputs, outputs and states)
     def getFSMHead(self,dic, name, input_list, output_list):
 
-        keys_list = []      #This list will store the dictionary keys (because the number of states can vary between FSMs)
+        # keys_list will store the dictionary keys/current-state-names (because the number of states can vary between FSMs)
+        keys_list = []
         for key in dic.keys():
             keys_list.append(key)
 
-        number_of_inputs = len( dic[keys_list[0]][0][0] )
-        #number_of_outputs = len( dic[keys_list[0]][0][2] )
+        # Store the number of inputs and states  
+        number_of_inputs = len(dic[keys_list[0]][0][0])
         number_of_states = len(keys_list)
-        required_state_bits = math.ceil(math.log(number_of_states, 2))  #Required number of bits to encode the different states
+
+        # Required number of bits to encode the different states (ceil function rounds up to the next integer number)
+        required_state_bits = math.ceil(math.log(number_of_states, 2))
         
+        # Begin the Verilog header string by calling the module, reset and clock signals
         FSMHead =   (f"module {name}(\n"
                     "  input reset, clock,")
 
-        current_bus_size = 0        #Create variable for later use
-        last_bus_size = 0           #Create variable for later use
+        # Initialize two variables for later use
+        current_bus_size = 0
+        last_bus_size = 0
 
         # Get the input instantiation
         if (number_of_inputs > 0):
@@ -63,13 +68,14 @@ class FSM:
                 FSMHead += f"{i[0]}, "
                 last_bus_size = current_bus_size
         
+        # Reset the current and last bus variables to 0
         current_bus_size = last_bus_size = 0
 
         # Get the output instantiation
         for i in output_list:
             current_bus_size = int(i[1])
-                # If the size of the current signal is different to the last,
-                # instantiate a new output size, else append it to current size
+            # If the size of the current signal is different to the last,
+            # instantiate a new output size, else append it to current size
             if (current_bus_size != last_bus_size):
                 FSMHead += "\n  output reg "
                 if (current_bus_size > 1):
@@ -77,11 +83,14 @@ class FSM:
             FSMHead += f"{i[0]}, "
             last_bus_size = current_bus_size
 
-        FSMHead = FSMHead[:-2]                      #Remove the last two characters ", "
+        # Remove the last two characters ", "
+        FSMHead = FSMHead[:-2]
         
+        # Pass the states keys to a string for later use
         delimiter = ', '
-        keys_string = delimiter.join(keys_list)     #Pass the states keys to a string for later use
+        keys_string = delimiter.join(keys_list)
 
+        # Create the states as a new variable of type statetype, using enum. Then, create the State Register always block
         FSMHead += (");\n\n"
                 f"  typedef enum reg [{required_state_bits-1}:0] {{{keys_string}}} statetype;\n"
                 f"  statetype state, nextstate;\n\n"    #Should be "  statetype [{required_state_bits-1}:0] state, nextstate;", but works in EPWave
