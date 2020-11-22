@@ -4,26 +4,30 @@ import csv
 import re
 import os
 
-gsuf = ""
-gkey = ""
 
-# Prompts for valid file name and assigns file text to string
-def getFileCont(suf,key):
-    global gsuf
-    global gkey
-    gkey = key
-    gsuf = suf
-    f = open(getFileName())
-    fileCon = f.read()
-    f.close()
-    return fileCon
-
-
-
+#**************************************************************************************************
+#   Function:
+#       getFileName(suf = "",key = "").
+#
+#   Description:
+#       This function asks for a file name and search for it in the directory given. 
+#       If the file was not found, it will search for other files in the current directory 
+#       and give the user the option to use them.
+#       Additionally, a file extension and a keyword can be passed as a parameter, this will
+#       limit the search to files with the extension and without the keyword.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * suf - File extention to use.
+#       * key - Ignored files Keyword.
+#
+#    Return Values:
+#       * fileName - File name to use.
+#**************************************************************************************************
 def getFileName(suf = "",key = ""):
-    if (suf == ""):
-        suf = gsuf
-        key = gkey
+    
     fileCont = "y"
     # Check if the user wants to continue trying new file names
     while(fileCont == "Y" or fileCont == "y"):
@@ -85,12 +89,32 @@ def getFileName(suf = "",key = ""):
             else: fileCont = "y"
     return fileName
 
-# Function to get data from the table
+#**************************************************************************************************
+#   Function:
+#       getFSMData(path).
+#
+#   Description:
+#       This function opens a csv file with the description of a finite state machine and gets 
+#       the information of the state transitions, the input and output names and the start state, 
+#       and places it in containers to finally return them. 
+#
+#   Precondition:
+#       This function must be called with an existing path. Otherwise it will produce fail.
+#
+#   Parameters:
+#       * path - Path of the csv file to use.
+#
+#    Return Values:
+#       * states - Dictionary for states transitions: [state:[inputs, Next state, outputs]]  
+#       * NameInputs - List of inputs names with its radix and bus size.
+#       * NameOutputs - List of outputs names with its radix and bus size.
+#       * firstState - Name of the fist state.
+#**************************************************************************************************
 def getFSMData(path):
-    states = {}                             # Dictionary for states: [inputs, Next state, outputs]  
-    NameInputs = []                         # List of inputs names
-    NameOutputs = []                        # List of outputs names
-    firstState = ""                         # Initialize the default state
+    states = {}                             # Dictionary for states transitions: [state:[inputs, Next state, outputs]]
+    NameInputs = []                         # List of inputs names with its radix and bus size.
+    NameOutputs = []                        # List of outputs names with its radix and bus size.
+    firstState = ""                         # Name of the fist state.
     regex = r"^(\w+)($|\((\d+)((b|h|d)|.*)\)$)" # RegEx for the table header
     tempIn = []                             # Auxilary list for inputs values
     tempOut = []                            # Auxilary list for outputs values
