@@ -68,10 +68,10 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
     
     FSMdictionary states;
     smatch m;
-    regex reBus("^(\\w+)\\((\\d+)((b|h|d)|.*)\\)$");
+    regex reBus("^(\\w+)($|\\((\\d+)((b|h|d)|.*)\\)$)");
 
     // Get file name
-    tabName = getFileName("csv","_Design","FSMTable.csv");
+    tabName = getFileName("csv","FSMTable.csv");
 
     // Get the content of the .csv file and save in the string stream ss
     ss.str(getFileCont(tabName));
@@ -92,7 +92,7 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
         if(countRow == 2){
             for(int i = 0; i < cInputs.size(); i++){
                 regex_search (cInputs[i],m,reBus);
-                vector <string> temp {m[1], m[2], m[3]};
+                vector <string> temp {m[1], m[3], m[5]};
                 // if no radix is specified, assign "d"
                 temp[2] = (temp[2] =="")?"d":temp[2];
                 // if no bus size is specified, assign 1
@@ -101,7 +101,7 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
             }
             for(int i = 0; i < cOutputs.size(); i++){
                 regex_search (cOutputs[i],m,reBus);
-                vector <string> temp {m[1], m[2], m[3]};
+                vector <string> temp {m[1], m[3], m[5]};
                 // if no radix is specified, assign "d"
                 temp[2] = (temp[2] =="")?"d":temp[2];
                 // if no bus size is specified, assign 1
