@@ -10,6 +10,7 @@ int main(){
     // Get data from the table, this includes the name of the inputs,
     // outputs, states, table and its values
     States = getFSMData(sstate, inputs, outputs,name);
+
     // Get the path and name of the table without extension
     name = string(name.substr(0,name.size()-4));
     vector<string> dv;

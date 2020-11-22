@@ -284,12 +284,12 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
                     // If there was a condition before, append an "&&"
                     if (f) Temp += " && ";
                     Temp += Ni[j][0] + " == " + i.get_inputs()[j];
+                    IF = true;
                     f = true;
                 }
             }
             // If conditions were found, append the conditions
             if (IF){
-                IF = true;
                 FSMOLogic += Temp + ") begin\n";
                 FSMSLogic += Temp + ")\n";
             }
@@ -299,6 +299,7 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
             
             // Append the output values for all outputs depending on the current state and the conditions
             for (int j=0;j<No.size();j++){
+                cout << No[j][0];
                 if (i.get_outputs()[j] != "x" and i.get_outputs()[j] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + i.get_outputs()[j] + ";\n";
             }
