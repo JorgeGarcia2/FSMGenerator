@@ -3,7 +3,29 @@
 # import math module
 import math
 
-# Creates the Verilog design file's header (TOP module with inputs, outputs and states)
+#**************************************************************************************************
+#   Function:
+#       getFSMHead(dic, name, input_list, output_list).
+#
+#   Description:
+#       This function creates the Verilog design file's header.
+#       It begins by creating the Finite State Machine's module, then declares
+#       the input and output signals. It also creates a statetype variable
+#       for the required number of different states.
+#       This function finishes by creating the State Register of the FSM design.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * dic - Dictionary for states transitions: [state:[inputs, Next state, outputs]].
+#       * name - Name of the FSM module.
+#       * input_list - List of inputs names with its radix and bus size.
+#       * output_list - List of outputs names with its radix and bus size.
+#
+#    Return Value:
+#       * FSMHead - String containing the verilog module's header and the State Register.
+#**************************************************************************************************
 def getFSMHead(dic, name, input_list, output_list):
 
     # keys_list will store the dictionary keys/current-state-names (because the number of states can vary between FSMs)
