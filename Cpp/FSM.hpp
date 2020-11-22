@@ -249,8 +249,29 @@ inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_lis
     return FSMHead;
 }
 
-// Function for getting the string of the next state and output logic of the FSM
-inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal){
+/**************************************************************************************************
+#   Function:
+#       getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal).
+#
+#   Description:
+#       This function creates the Verilog code for the next state and output block for a Finite 
+#       State Machine based on the information provided by the arguments.
+#
+#   Precondition:
+#       This function must be called after getFSMHead function to continue with the FSM code.
+#
+#   Parameters:
+#       * dicS - Dictionary with information about states transitions.
+#       * ppal - FSM Principal state.
+#       * Ni - A vector of vectors of strings containing the inputs names with its radix and bus size.
+#       * No - A vector of vectors of strings containing the outputs names with its radix and bus size.
+#
+#    Return Value:
+#       * FSMSLogic + FSMOLogic - concatenation of the FSMSLogic and FSMOLogic strings 
+#           which contain the verilog code for the Next State and Output blocks respectively.
+**************************************************************************************************/
+inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal)
+{
     string FSMOLogic, FSMSLogic;
 
     // Initialize state logic block with an always sensitive to the current state and the inputs
@@ -333,7 +354,28 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
     return FSMSLogic + FSMOLogic;
 }
 
-// Function for writing the code to a file with termination "_CppDesign.v"
+/**************************************************************************************************
+#   Function:
+#       writeFSM(string name, string code).
+#
+#   Description:
+#       This function creates the Finite State Machine's Verilog design file.
+#       It appends the key '_CppDesign' to make a distinction between the Python
+#       and the C++ FSM generators.
+#       It begins by Creating a file with the given name for writing purposes.
+#       It then writes the contents of all the strings created throughout the program.
+#       It finishes by closing the file and returning a value of "true".
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * name - Name of the Verilog file to create.
+#       * code - String containing the entire Verilog file.
+#
+#    Return Value:
+#       * f - a boolean variable shifted to "true" after the successful creation of the Verilog design file.
+**************************************************************************************************/
 inline bool writeFSM(string name, string code)
 {
     bool f = false;
@@ -345,7 +387,23 @@ inline bool writeFSM(string name, string code)
     return f;
 }
 
-// Function for printing easy to read format of the dictionary
+/**************************************************************************************************
+#   Function:
+#       printFSMDict(FSMdictionary dicS).
+#
+#   Description:
+#       This function prints the contents of the Map in an easy-to-read format for the user.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * name - Name of the Verilog file to create.
+#       * code - String containing the entire Verilog file.
+#
+#    Return Value:
+#       * f - a boolean variable shifted to "true" after the successful creation of the Verilog design file.
+**************************************************************************************************/
 inline void printFSMDict(FSMdictionary dicS){
     vector<string> tInputs;
     vector<string> tOutputs;
