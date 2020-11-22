@@ -18,6 +18,8 @@ def getFileCont(suf,key):
     f.close()
     return fileCon
 
+
+
 def getFileName(suf = "",key = ""):
     if (suf == ""):
         suf = gsuf
@@ -85,15 +87,15 @@ def getFileName(suf = "",key = ""):
 
 # Function to get data from the table
 def getFSMData(path):
-    states = {}                              # Dictionary for states: [inputs, Next state, outputs]  
-    NameInputs = []                          # List of input names
-    NameOutputs = []                         # List of input names
-    firstState = ""                          # Initialize the default state
-    regex = r"^(\w+)\((\d+)((b|h|d)|.*)\)$"  # Initialize RegEx for the table header
-    tempIn = []
-    tempOut = []
+    states = {}                             # Dictionary for states: [inputs, Next state, outputs]  
+    NameInputs = []                         # List of inputs names
+    NameOutputs = []                        # List of outputs names
+    firstState = ""                         # Initialize the default state
+    regex = r"^(\w+)($|\((\d+)((b|h|d)|.*)\)$)" # RegEx for the table header
+    tempIn = []                             # Auxilary list for inputs values
+    tempOut = []                            # Auxilary list for outputs values
 
-    # Open the file
+    # Open the file for reading
     with open(path, 'r') as file:
 
         # Read the file as a csv table
@@ -104,7 +106,7 @@ def getFSMData(path):
         for row in reader:
             i += 1
 
-            # Get inputs and outputs
+            # Get inputs and outputs values and split them into their list
             tempIn = row[0].split("|")
             tempOut = row[3].split("|")
             
@@ -114,28 +116,29 @@ def getFSMData(path):
                 # Get input names, size and radix
                 for elemet in tempIn:
                     match = re.search(regex,elemet)
-                    NameInputs.append([match.group(1), match.group(2), match.group(4)])
+                    NameInputs.append([match.group(1), match.group(3), match.group(5)])
 
-                # Get input names, size and radix
+                # Get output names, size and radix
                 for elemet in tempOut:
                     match = re.search(regex,elemet)
-                    NameOutputs.append([match.group(1), match.group(2), match.group(4)])
+                    NameOutputs.append([match.group(1), match.group(3), match.group(5)])
 
             # If the read row is below the second row, get values
             if (i>2):
-                #Get first state read
+                #Get the first state read
                 if(i == 3): firstState = row[2]
                 # InputValue = [size]'[radix][value]
-                for j in range(len(tempIn)):
-
+                # OutputValue = [size]'[radix][value]
+                    # if size was not specified, "1" by default
                     # if radix was not specified, "d" by default
+                for j in range(len(tempIn)):
                     if (tempIn[j] != "x" and tempIn[j] != "X"):
+                        if (NameInputs[j][1] == None): NameInputs[j][1] = "1"
                         if (NameInputs[j][2] == None): NameInputs[j][2] = "d"
                         tempIn[j] = NameInputs[j][1] + "'" + NameInputs[j][2] + tempIn[j]
-
-                # OutputValue = [size]'[radix][value]
                 for j in range(len(tempOut)):
                     if (tempOut[j] != "x" and tempOut[j] != "X"):
+                        if (NameOutputs[j][1] == None): NameOutputs[j][1] = "1"
                         if (NameOutputs[j][2] == None): NameOutputs[j][2] = "d"
                         tempOut[j] = NameOutputs[j][1] + "'" + NameOutputs[j][2] + tempOut[j]
 
