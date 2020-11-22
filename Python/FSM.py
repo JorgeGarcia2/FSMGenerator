@@ -95,7 +95,27 @@ def getFSMHead(dic, name, input_list, output_list):
     
     return FSMHead
 
-#Makes the state and output logic for the machine
+#**************************************************************************************************
+#   Function:
+#       getFSMLogic(dicS,Ni,No,ppal).
+#
+#   Description:
+#       This function creates the Verilog code for the next state and output block for a Finite 
+#       State Machine based on the information provided by the arguments.
+#
+#   Precondition:
+#       This function must be called after getFSMHead function to continue with the FSM code.
+#
+#   Parameters:
+#       * dicS - Dictionary with information about states transitions.
+#       * ppal - FSM Principal state.
+#       * Ni - List of inputs names with its radix and bus size.
+#       * No - List of outputs names with its radix and bus size.
+#
+#    Return Values:
+#       * FSMSLogic + FSMOLogic - concatenation of the FSMSLogic and FSMOLogic strings 
+#           which contain the verilog code for the Next State and Output blocks respectively.
+#**************************************************************************************************
 def getFSMLogic(dicS,Ni,No,ppal):
 
     # Initialize state logic block with an always sensitive to the current state and the inputs
