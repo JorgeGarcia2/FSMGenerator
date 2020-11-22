@@ -5,7 +5,26 @@
 
 using namespace std;
 
-inline string getFileName(string suf, string key, string def){
+/***************************************************************************************************
+#   Function:
+#       string getFileName(string suf, string def)
+#
+#   Description:
+#       This function requests a file name and looks for it in the specified directory. if the 
+#       file has no extension, add the extension given by the suff parameter. If the file cannot 
+#       be found, it will search for a default file.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * suf - extension to add to the file name in case it doesn't have one.
+#       * def - default filename to search in case the file name given by the user is not found.
+#
+#    Return Values:
+#       * fName - File name to use.
+**************************************************************************************************/
+inline string getFileName(string suf, string def){
     ifstream file;
     string fName;
     while (1){
@@ -37,7 +56,22 @@ inline string getFileName(string suf, string key, string def){
     return fName;
 }
 
-// Function to get the contents of a file in string format
+/***************************************************************************************************
+#   Function:
+#       string getFileCont(string fileName).
+#
+#   Description:
+#       This function gets the content of a file and returns it in a string.
+#
+#   Precondition:
+#       This function must be called with an existing path obtain for getFileName function.
+#
+#   Parameters:
+#       * fileName - extension to add to the file name in case it doesn't have one.
+#
+#    Return Values:
+#       * fileCont - String with the content of the file read.
+**************************************************************************************************/
 inline string getFileCont(string fileName){
     ifstream file;
 
@@ -52,7 +86,25 @@ inline string getFileCont(string fileName){
     return fileCont;
 }
 
-// Function to get vector of strings by splitting a string using delimeter
+/***************************************************************************************************
+#   Function:
+#       void split(const string& str, vector<string> &cont, char delim).
+#
+#   Description:
+#       This function splits a string using a character as a delimiter and stores the 
+#       substrings in a vector of strings.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * str - string to split.
+#       * cont - memory address of the string vector to store the substrings.
+#       * delim - delimiter character.
+#
+#    Return Values:
+#       * None.
+**************************************************************************************************/
 inline void split(const string& str, vector<string> &cont, char delim)
 {
     stringstream ss(str);
