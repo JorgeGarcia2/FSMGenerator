@@ -35,15 +35,37 @@ typedef vector<FSMLine> Line_vector;
 typedef map<string, Line_vector> FSMdictionary;
 typedef vector <vector<string>> busInfo;
 
+/**************************************************************************************************
+#   Function:
+#       getFSMData(string &startState, busInfo &nameInputs, busInfo &nameOutputs, string &tabName).
+#
+#   Description:
+#       This function commands the search of a CSV file and the extraction of its contents.
+#       Then, the information of interest is placed in different containers for
+#       easier manipulation. The parameters are passed by reference so that this function
+#       is able to modify their contents.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * startState - Name of the first state.
+#       * nameInputs - A vector of vectors of strings containing the inputs names with its radix and bus size.
+#       * nameOutputs - A vector of vectors of strings containing the outputs names with its radix and bus size.
+#       * tabName - Name of the CSV file.
+#
+#    Return Value:
+#       * states - Map for states transitions: [state:[inputs, Next state, outputs]]
+**************************************************************************************************/
 inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo &nameOutputs, string &tabName)
 {
     string lineCont;
     int countRow = 0;
-    // , startState;
+    
     stringstream ss;
     // Vector to save the row, inputs, and outputs from the current row 
     vector <string> cRow, cInputs, cOutputs, temp;
-    // vector <vector<string>> nameInputs, nameOutputs;
+    
     FSMdictionary states;
     smatch m;
     regex reBus("^(\\w+)\\((\\d+)((b|h|d)|.*)\\)$");
@@ -63,7 +85,7 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
         cOutputs.clear();
         // Sperate the row in vectors using commas as delimeters
         split(lineCont,cRow,',');
-        // separate inputs and outputs from the current row using "|"as delimeter
+        // separate inputs and outputs from the current row using "|"as delimiter
         split(cRow[0],cInputs,'|');
         split(cRow[3],cOutputs,'|');
         // obtain size bus and radix
@@ -106,15 +128,39 @@ inline FSMdictionary getFSMData(string &startState, busInfo &nameInputs, busInfo
     return states;
 }
 
+/**************************************************************************************************
+#   Function:
+#       getFSMHead(string& name, FSMdictionary& States, busInfo& input_list, busInfo& output_list).
+#
+#   Description:
+#       This function creates the Verilog design file's header.
+#       It begins by creating the Finite State Machine's module, then declares
+#       the input and output signals. It also creates a statetype variable
+#       for the required number of different states.
+#       This function finishes by creating the State Register of the FSM design.
+#
+#   Precondition:
+#       None.
+#
+#   Parameters:
+#       * name - Name of the FSM module.
+#       * States - map for states transitions: [state:[inputs, Next state, outputs]].
+#       * input_list - List of inputs names with its radix and bus size.
+#       * output_list - List of outputs names with its radix and bus size.
+#
+#    Return Value:
+#       * FSMHead - String containing the verilog module's header and the State Register.
+**************************************************************************************************/
 inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_list, busInfo& output_list)
 {
-    vector<string> keys_vector;     // Store the dictionary keys inside the keys_vector for later use
+    // keys_vector will store the dictionary keys/current-state-names (because the number of states can vary between FSMs)
+    vector<string> keys_vector;
     for(FSMdictionary::iterator it = States.begin(); it != States.end(); ++it)
     {
         keys_vector.push_back(it->first);
     }
 
-    //Call the sort function with the third parameter to accomodate elements in keys_vector in ascending numerical order
+    // Call the sort function with the third parameter to accomodate elements in keys_vector in ascending numerical order
     sort(begin(keys_vector), end(keys_vector), [](const string& s1, const string& s2)
     {
         if (s1.size() != s2.size())
@@ -122,63 +168,77 @@ inline string getFSMHead(string& name, FSMdictionary& States, busInfo& input_lis
         return (s1 < s2);
     });
 
-    // States[keys_vector[i]][j] gets the j-esim object of type FSMLine, whose key is keys_vector[i]
+    // Store the number of inputs and states
     unsigned int number_of_inputs = States[keys_vector[0]][0].get_inputs().size();
-    unsigned int number_of_outputs = States[keys_vector[0]][0].get_outputs().size();
     unsigned int number_of_states = keys_vector.size();
+
+    // Required number of bits to encode the different states (ceil function rounds up to the next integer number)
     unsigned int required_state_bits = ceil(log2(number_of_states));
 
-    // Initialize string
+    // Begin the Verilog header string by calling the module, reset and clock signals
     string FSMHead = "module " + name + "(\n"
              + "  input reset, clock,";
 
-    unsigned int current_bus_size = 0;          // Create variable for later use
-    unsigned int last_bus_size = 0;             // Create variable for later use
+    // Initialize two variables for later use
+    unsigned int current_bus_size = 0;
+    unsigned int last_bus_size = 0;
 
+    // Get the input instantiation
     if (number_of_inputs > 0)
     {
-        for (unsigned int i = 0; i < input_list.size(); i++)    // For all the inputs of the FSM
+        for (unsigned int i = 0; i < input_list.size(); i++)
         {
-            current_bus_size = stoi(input_list[i][1]);      // Store the current bus size
-            if (current_bus_size != last_bus_size)          // In case that the bus size has changed...
+            current_bus_size = stoi(input_list[i][1]);
+
+            // If the size of the current signal is different to the last,
+            // instantiate a new input size, else append it to current size
+            if (current_bus_size != last_bus_size)
             {
-                FSMHead += "\n  input ";                    // ...a new input declaration is needed
+                FSMHead += "\n  input ";
                 if (current_bus_size > 1)
                     FSMHead += "[" + to_string(current_bus_size - 1) + ":0] ";
                 FSMHead += input_list[i][0] + ", ";
             }
             else
                 FSMHead += input_list[i][0] + ", ";            
-            last_bus_size = current_bus_size;               // Now store the used bus size as "last bus size"
+            last_bus_size = current_bus_size;
         }
     }
 
+    // Reset the current and last bus variables to 0
     current_bus_size = last_bus_size = 0;
 
-    for (unsigned int i = 0; i < output_list.size(); i++)       // For all the outputs of the FSM
+    // Get the output instantiation
+    for (unsigned int i = 0; i < output_list.size(); i++)
     {
-        current_bus_size = stoi(output_list[i][1]);         // Store the current bus size
-        if (current_bus_size != last_bus_size)              // In case that the bus size has changed...
+        current_bus_size = stoi(output_list[i][1]);
+
+        // If the size of the current signal is different to the last,
+        // instantiate a new input size, else append it to current size
+        if (current_bus_size != last_bus_size)
         {
-            FSMHead += "\n  output reg ";                   // ...a new output reg declaration is needed
+            FSMHead += "\n  output reg ";
             if (current_bus_size > 1)
                 FSMHead += "[" + to_string(current_bus_size - 1) + ":0] ";
             FSMHead += output_list[i][0] + ", ";
         }
         else
             FSMHead += output_list[i][0] + ", ";
-        last_bus_size = current_bus_size;                   // Now store the used bus size as "last bus size"
+        last_bus_size = current_bus_size;
     }
 
-    FSMHead.erase(FSMHead.end()-2);             // Remove the last two characters
-    FSMHead.pop_back();                         // This function seems necessary
+    // Remove the last two characters ", "
+    FSMHead.erase(FSMHead.end()-2);
+    FSMHead.pop_back();
 
-    string keys_string;                         // Pass the states keys to a string for later use
+    // Pass the states keys to a string for later use
+    string keys_string;
     for (const auto &piece : keys_vector) keys_string += piece + ", ";
-    keys_string.erase(keys_string.end()-2);     // Remove the last two characters
-    keys_string.pop_back();                     // This function seems necessary
+    keys_string.erase(keys_string.end()-2);
+    keys_string.pop_back();
 
-    FSMHead += ");\n\n";                        // Add the information to the head string
+    // Create the states as a new variable of type statetype, using enum. Then, create the State Register always block
+    FSMHead += ");\n\n";
     FSMHead += "  typedef enum reg [" + to_string(required_state_bits-1) + ":0] {" + keys_string + "} statetype;\n"
              + "  statetype state, nextstate;\n\n"
              + "  // State register\n"
