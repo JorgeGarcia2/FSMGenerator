@@ -299,7 +299,6 @@ inline string getFSMLogic(FSMdictionary dicS, busInfo Ni, busInfo No,string ppal
             
             // Append the output values for all outputs depending on the current state and the conditions
             for (int j=0;j<No.size();j++){
-                cout << No[j][0];
                 if (i.get_outputs()[j] != "x" and i.get_outputs()[j] != "X")
                     FSMOLogic += "          " + No[j][0] + " = " + i.get_outputs()[j] + ";\n";
             }

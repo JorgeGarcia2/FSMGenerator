@@ -1,5 +1,5 @@
 Inputs,Current State,Next State,Output
-Po(5b)|Op(6h),CS,NS,X|Y
+Po(5b)|Op(6h),CS,NS,X(14d)|Y(5h)
 x|x,S0,S1,1|9
 x|0,S1,S6,2|8
 x|4,S1,S8,3|7
