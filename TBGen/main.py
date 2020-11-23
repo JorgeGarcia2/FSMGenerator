@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/bin/python3.6
 
 from Testbench import Testbench
 

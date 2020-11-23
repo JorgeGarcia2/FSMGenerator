@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/bin/python3.6
 
 # import custom FSM and file manager modules
 import FSM
